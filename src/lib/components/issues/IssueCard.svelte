@@ -1,6 +1,7 @@
 <script>
-    import { Trash2, Calendar } from 'lucide-svelte';
-    import { exportICS } from '$lib/utils/exportUtils.js';
+    import { Trash2, Calendar, Share2} from 'lucide-svelte';
+    import { exportICS, shareIssue } from '$lib/utils/exportUtils.js';
+    
 	let { issue, deleteIssue } = $props();
 </script>
 
@@ -31,4 +32,11 @@
     >
         <Calendar size={16} />
     </button>
+
+    <button
+		class="absolute top-2 right-14 text-green-600 "
+		onclick={() => shareIssue(issue)}
+	>
+		<Share2 size={16} />
+	</button>
 </div>

@@ -32,3 +32,21 @@ END:VCALENDAR
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+
+export async function shareIssue(issue) {
+  if (!navigator.share) {
+    console.error('Web Share API not supported');
+    return;
+  }
+
+  try {
+    await navigator.share({
+      title: issue.title,
+      text: `Description: ${issue.description}\nDue: ${issue.dueDate.toLocaleDateString()}\nPoints: ${issue.storyPoints}\nPriority: ${issue.priority}`,
+      url: window.location.href
+    });
+  } catch (error) {
+    console.error('Share failed:', error);
+  }
+}
