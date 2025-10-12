@@ -1,20 +1,22 @@
 <script>
     import { Trash2, Calendar, Share2} from 'lucide-svelte';
     import { exportICS, shareIssue } from '$lib/utils/exportUtils.js';
+    import { isOverdue, formatDate } from '$lib/utils/dateUtils.js';
     
 	let { issue, deleteIssue } = $props();
+    let overdue = $derived(isOverdue(issue.dueDate));
 </script>
 
 <div
     role="article"
-	class="mb-4 rounded bg-white p-4 shadow cursor-move relative group"
-	draggable="true"
+    class="mb-4 rounded bg-white p-4 shadow cursor-move group relative {overdue ? 'border-l-4 border-red-500' : ''}"	draggable="true"
 	ondragstart={(e) => {
 		e.dataTransfer.setData('text/plain', issue.id);
 	}}
->	<h3 class="font-bold">{issue.title}</h3>
+>
+	<h3 class="font-bold">{issue.title} {#if overdue}<span class="text-red-600 text-sm">(Overdue)</span>{/if}</h3>
 	<p>{issue.description}</p>
-	<p>Due: {issue.dueDate.toLocaleDateString()}</p>
+	<p>Due: {formatDate(issue.dueDate)}</p>
 	<p>Points: {issue.storyPoints}</p>
 	<p>Priority: {issue.priority}</p>
     <p>Status: {issue.status}</p>

@@ -1,7 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
 	import Lane from '$lib/components/lanes/Lane.svelte';
-	import CreateIssueDialog from '$lib/components/CreateIssueDialog.svelte';
+	import CreateIssueDialog from '$lib/components/issues/CreateIssueDialog.svelte';
   import { loadIssues, saveIssues } from '$lib/utils/storage.js';
 
   let issues = $state([]);
