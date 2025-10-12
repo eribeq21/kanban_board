@@ -1,11 +1,17 @@
 <script>
-  let { issue } = $props();  
+	let { issue } = $props();
 </script>
 
-<div class="p-4 mb-4 bg-white rounded shadow">
-  <h3 class="font-bold">{issue.title}</h3>
-  <p>{issue.description}</p>
-  <p>Due: {issue.dueDate.toLocaleDateString()}</p>
-  <p>Points: {issue.storyPoints}</p>
-  <p>Priority: {issue.priority}</p>
+<div
+    role="article"
+	class="mb-4 rounded bg-white p-4 shadow cursor-move"
+	draggable="true"
+	ondragstart={(e) => {
+		e.dataTransfer.setData('text/plain', issue.id);
+	}}
+>	<h3 class="font-bold">{issue.title}</h3>
+	<p>{issue.description}</p>
+	<p>Due: {issue.dueDate.toLocaleDateString()}</p>
+	<p>Points: {issue.storyPoints}</p>
+	<p>Priority: {issue.priority}</p>
 </div>

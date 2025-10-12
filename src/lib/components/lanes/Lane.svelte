@@ -1,12 +1,29 @@
 <script>
-  import IssueCard from '../IssueCard.svelte';
+	import IssueCard from '$lib/components/IssueCard.svelte';
 
-  let { name, color, issues } = $props();
+	let { name, color, issues, updateStatus } = $props();
+
+    let isOver = $state(false); // For dropzone highlighting
 </script>
 
-<div class="flex-1 p-4 border-r border-gray-300" style="background-color: {color}10;">
-  <h2 class="text-lg font-bold mb-4">{name}</h2>
-  {#each issues as issue (issue.id)}
-    <IssueCard issue={issue} />
-  {/each}
+<div
+	role="region"
+	class="flex-1 border-r border-gray-300 p-4 {color} {isOver ? 'border-2 border-dashed border-blue-500 bg-opacity-50' : ''}"
+	ondragover={(e) => {
+		e.preventDefault();
+		isOver = true;
+	}}
+	ondragleave={() => (isOver = false)}
+	ondrop={(e) => {
+		e.preventDefault();
+		isOver = false;
+		const id = e.dataTransfer.getData('text/plain');
+		updateStatus(id, name);
+	}}
+>
+	<h2 class="mb-4 text-lg font-bold">{name}</h2>
+
+	{#each issues as issue (issue.id)}
+		<IssueCard {issue} />
+	{/each}
 </div>
