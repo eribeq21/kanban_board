@@ -37,6 +37,10 @@
 		}
 	}
 
+	// Callback for deleting an issue
+	function deleteIssue(id) {
+		issues = issues.filter((i) => i.id !== id); // Reactive update
+	}
 </script>
 
 <main class="flex h-screen flex-col">
@@ -45,10 +49,10 @@
 	</header>
 
 	<div class="flex flex-1 overflow-auto">
-		<Lane name="Do" color="bg-blue-50" issues={doIssues} updateStatus={updateStatus} />
-		<Lane name="Doing" color="bg-yellow-50" issues={doingIssues} updateStatus={updateStatus} />
-		<Lane name="Done" color="bg-green-50" issues={doneIssues} updateStatus={updateStatus} />
-		<Lane name="Archive" color="bg-gray-50" issues={archiveIssues} updateStatus={updateStatus} />
+		<Lane name="Do" color="bg-blue-50" issues={doIssues} updateStatus={updateStatus} deleteIssue={deleteIssue} />
+		<Lane name="Doing" color="bg-yellow-50" issues={doingIssues} updateStatus={updateStatus} deleteIssue={deleteIssue} />
+		<Lane name="Done" color="bg-green-50" issues={doneIssues} updateStatus={updateStatus} deleteIssue={deleteIssue} />
+		<Lane name="Archive" color="bg-gray-50" issues={archiveIssues} updateStatus={updateStatus} deleteIssue={deleteIssue} />
 	</div>
 
 	{#if showDialog}

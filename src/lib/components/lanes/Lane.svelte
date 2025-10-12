@@ -1,7 +1,7 @@
 <script>
 	import IssueCard from '$lib/components/IssueCard.svelte';
 
-	let { name, color, issues, updateStatus } = $props();
+	let { name, color, issues, updateStatus , deleteIssue } = $props();
 
     let isOver = $state(false); // For dropzone highlighting
 </script>
@@ -24,6 +24,6 @@
 	<h2 class="mb-4 text-lg font-bold">{name}</h2>
 
 	{#each issues as issue (issue.id)}
-		<IssueCard {issue} />
+		<IssueCard {issue} deleteIssue={deleteIssue} />
 	{/each}
 </div>

@@ -1,5 +1,5 @@
 <script>
-	let { issue } = $props();
+	let { issue, deleteIssue } = $props();
 </script>
 
 <div
@@ -14,4 +14,8 @@
 	<p>Due: {issue.dueDate.toLocaleDateString()}</p>
 	<p>Points: {issue.storyPoints}</p>
 	<p>Priority: {issue.priority}</p>
+    <button
+		class="mt-2 text-red-600 hover:text-red-800"
+		onclick={() => deleteIssue(issue.id)}
+	>Delete</button>
 </div>
