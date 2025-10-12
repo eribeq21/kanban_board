@@ -1,9 +1,21 @@
 <script>
+	import { onMount } from 'svelte';
 	import Lane from '$lib/components/lanes/Lane.svelte';
 	import CreateIssueDialog from '$lib/components/CreateIssueDialog.svelte';
+  import { loadIssues, saveIssues } from '$lib/utils/storage.js';
 
-	let issues = $state([]);
+  let issues = $state([]);
 	let showDialog = $state(false);
+
+  // Load issues from localStorage on mount (client-side only)
+  onMount(() => {
+    issues = loadIssues();
+  });
+
+  // Save issues to localStorage whenever they change
+  $effect(() => {
+    saveIssues(issues);
+  });
 
 	// Derived filtered issues for each lane
 	let doIssues = $derived(issues.filter((issue) => issue.status === 'Do'));
