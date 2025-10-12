@@ -11,10 +11,12 @@ export async function getCountry() {
 			async (pos) => {
 				try {
 					const response = await fetch(
-						`https://api.geoapify.com/v1/geocode/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&type=country&apiKey=${API_KEY}`
+						`https://api.geoapify.com/v1/geocode/reverse?lat=${pos.coords.latitude}&lon=${pos.coords.longitude}&apiKey=${API_KEY}`
 					);
 					const data = await response.json();
-					const country = data.features[0]?.properties?.country || 'Unknown';
+					const properties = data.features[0]?.properties || {};
+					const country = properties.country || 'Unknown';
+					const city = properties.city || properties.town || properties.village || 'Unknown';
 
 					let flag = null;
 					if (country !== 'Unknown') {
@@ -23,7 +25,7 @@ export async function getCountry() {
 						flag = flagData[0]?.flags?.png || null;
 					}
 
-					resolve({ country, flag });
+					resolve({ country, city, flag });
 				} catch (error) {
 					reject(error);
 				}

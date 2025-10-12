@@ -13,24 +13,33 @@
 	);
 	let avgPoints = $derived(count > 0 ? (totalPoints / count).toFixed(1) : 0);
 	let overdueCount = $derived(issues.filter((issue) => isOverdue(issue.dueDate)).length);
+
+	// Drag and drop event handlers
+	function handleDragOver(e) {
+		e.preventDefault();
+		isOver = true;
+	}
+
+	function handleDragLeave() {
+		isOver = false;
+	}
+
+	function handleDrop(e) {
+		e.preventDefault();
+		isOver = false;
+		const id = e.dataTransfer.getData('text/plain');
+		updateStatus(id, name);
+	}
 </script>
 
 <div
 	role="region"
 	class="flex-1 border-r border-gray-300 p-4 {color} {isOver
-		? 'bg-opacity-50 border-2 border-dashed border-blue-500'
+		? 'border-2 border-dashed border-blue-500'
 		: ''}"
-	ondragover={(e) => {
-		e.preventDefault();
-		isOver = true;
-	}}
-	ondragleave={() => (isOver = false)}
-	ondrop={(e) => {
-		e.preventDefault();
-		isOver = false;
-		const id = e.dataTransfer.getData('text/plain');
-		updateStatus(id, name);
-	}}
+	ondragover={handleDragOver}
+	ondragleave={handleDragLeave}
+	ondrop={handleDrop}
 >
 	<h2 class="mb-4 text-lg font-bold">{name}</h2>
 

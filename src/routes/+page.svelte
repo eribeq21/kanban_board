@@ -1,36 +1,31 @@
 <script>
 	import { onMount } from 'svelte';
 
-	// components
+	// Components
 	import Lane from '$lib/components/lanes/Lane.svelte';
 	import CreateIssueDialog from '$lib/components/issues/CreateIssueDialog.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
 
-	// utils
+	// Utils
 	import { loadIssues, saveIssues } from '$lib/utils/storage.js';
 	import { getCountry } from '$lib/utils/geoUtils.js';
 
+	// Constants
+	const UNSPLASH_KEY = 'VembbgeQ3PYT_PjTuMDWhUMIOXB2JWaj2D4IchDJZGM';
+	const DEFAULT_BACKGROUND = 'https://via.placeholder.com/1920x1080?text=Default+Background';
+	
+	const LANES = [
+		{ name: 'Do', color: 'bg-blue-200/30' },
+		{ name: 'Doing', color: 'bg-yellow-200/30' },
+		{ name: 'Done', color: 'bg-green-200/30' },
+		{ name: 'Archive', color: 'bg-gray-200/30' }
+	];
+
+	// State
 	let issues = $state([]);
 	let showDialog = $state(false);
-
 	let countryData = $state({ country: 'Loading...', flag: null });
-
-	onMount(async () => {
-		issues = loadIssues();
-
-		// Fetch country data
-		try {
-			countryData = await getCountry();
-		} catch (error) {
-			console.error('Failed to get country:', error);
-			countryData = { country: 'Unknown', flag: null };
-		}
-	});
-
-	// Save issues to localStorage whenever they change
-	$effect(() => {
-		saveIssues(issues);
-	});
+	let backgroundUrl = $state('');
 
 	// Derived filtered issues for each lane
 	let doIssues = $derived(issues.filter((issue) => issue.status === 'Do'));
@@ -38,34 +33,72 @@
 	let doneIssues = $derived(issues.filter((issue) => issue.status === 'Done'));
 	let archiveIssues = $derived(issues.filter((issue) => issue.status === 'Archive'));
 
-	// Callback for adding new issue
+	// API calls
+	async function fetchBackgroundImage(country) {
+		const query = `${country} landscape`;
+
+		try {
+			const response = await fetch(
+				`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&orientation=landscape&per_page=1`,
+				{ headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` } }
+			);
+			const data = await response.json();
+
+			backgroundUrl = data.results.length > 0 ? data.results[0].urls.full : DEFAULT_BACKGROUND;
+		} catch (error) {
+			console.error('Unsplash error:', error);
+			backgroundUrl = DEFAULT_BACKGROUND;
+		}
+	}
+
+	async function init() {
+		issues = loadIssues();
+
+		try {
+			const data = await getCountry();
+			countryData = data;
+			await fetchBackgroundImage(data.country);
+		} catch (error) {
+			console.error('Geolocation error:', error.message);
+			countryData = { country: 'Unknown', city: 'Unknown', flag: null };
+		}
+	}
+
+	// Issue management
 	function addIssue(newIssue) {
 		issues.push({ ...newIssue, status: 'Do', creationDate: new Date() });
 		showDialog = false;
 	}
 
-	// Callback for updating issue status (used in drag-drop)
 	function updateStatus(id, newStatus) {
 		const issue = issues.find((i) => i.id === id);
-		if (issue) {
-			issue.status = newStatus;
-		}
+		if (issue) issue.status = newStatus;
 	}
 
-	// Callback for deleting an issue
 	function deleteIssue(id) {
-		issues = issues.filter((i) => i.id !== id); // Reactive update
+		issues = issues.filter((i) => i.id !== id);
 	}
+
+	// Lifecycle
+	onMount(init);
+
+	// Save issues to localStorage whenever they change
+	$effect(() => {
+		saveIssues(issues);
+	});
 </script>
 
 <main class="flex h-screen flex-col">
 	<Header {countryData} onCreateOpen={() => (showDialog = true)} />
-
-	<div class="flex flex-1 overflow-auto">
-		<Lane name="Do" color="bg-blue-50" issues={doIssues} {updateStatus} {deleteIssue} />
-		<Lane name="Doing" color="bg-yellow-50" issues={doingIssues} {updateStatus} {deleteIssue} />
-		<Lane name="Done" color="bg-green-50" issues={doneIssues} {updateStatus} {deleteIssue} />
-		<Lane name="Archive" color="bg-gray-50" issues={archiveIssues} {updateStatus} {deleteIssue} />
+	
+	<div
+		class="flex flex-1 overflow-auto bg-cover bg-center"
+		style="background-image: url('{backgroundUrl}');"
+	>
+		<Lane name="Do" color="bg-blue-200/30" issues={doIssues} {updateStatus} {deleteIssue} />
+		<Lane name="Doing" color="bg-yellow-200/30" issues={doingIssues} {updateStatus} {deleteIssue} />
+		<Lane name="Done" color="bg-green-200/30" issues={doneIssues} {updateStatus} {deleteIssue} />
+		<Lane name="Archive" color="bg-gray-200/30" issues={archiveIssues} {updateStatus} {deleteIssue} />
 	</div>
 
 	{#if showDialog}
