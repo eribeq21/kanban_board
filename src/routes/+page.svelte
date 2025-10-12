@@ -1,21 +1,36 @@
 <script>
 	import { onMount } from 'svelte';
+
+	// components
 	import Lane from '$lib/components/lanes/Lane.svelte';
 	import CreateIssueDialog from '$lib/components/issues/CreateIssueDialog.svelte';
-  import { loadIssues, saveIssues } from '$lib/utils/storage.js';
+	import Header from '$lib/components/layout/Header.svelte';
 
-  let issues = $state([]);
+	// utils
+	import { loadIssues, saveIssues } from '$lib/utils/storage.js';
+	import { getCountry } from '$lib/utils/geoUtils.js';
+
+	let issues = $state([]);
 	let showDialog = $state(false);
 
-  // Load issues from localStorage on mount (client-side only)
-  onMount(() => {
-    issues = loadIssues();
-  });
+	let countryData = $state({ country: 'Loading...', flag: null });
 
-  // Save issues to localStorage whenever they change
-  $effect(() => {
-    saveIssues(issues);
-  });
+	onMount(async () => {
+		issues = loadIssues();
+
+		// Fetch country data
+		try {
+			countryData = await getCountry();
+		} catch (error) {
+			console.error('Failed to get country:', error);
+			countryData = { country: 'Unknown', flag: null };
+		}
+	});
+
+	// Save issues to localStorage whenever they change
+	$effect(() => {
+		saveIssues(issues);
+	});
 
 	// Derived filtered issues for each lane
 	let doIssues = $derived(issues.filter((issue) => issue.status === 'Do'));
@@ -29,7 +44,7 @@
 		showDialog = false;
 	}
 
-  // Callback for updating issue status (used in drag-drop)
+	// Callback for updating issue status (used in drag-drop)
 	function updateStatus(id, newStatus) {
 		const issue = issues.find((i) => i.id === id);
 		if (issue) {
@@ -44,15 +59,13 @@
 </script>
 
 <main class="flex h-screen flex-col">
-	<header class="bg-gray-800 p-4 text-white">
-		<button onclick={() => (showDialog = true)}>Create Issue</button>
-	</header>
+	<Header {countryData} onCreateOpen={() => (showDialog = true)} />
 
 	<div class="flex flex-1 overflow-auto">
-		<Lane name="Do" color="bg-blue-50" issues={doIssues} updateStatus={updateStatus} deleteIssue={deleteIssue} />
-		<Lane name="Doing" color="bg-yellow-50" issues={doingIssues} updateStatus={updateStatus} deleteIssue={deleteIssue} />
-		<Lane name="Done" color="bg-green-50" issues={doneIssues} updateStatus={updateStatus} deleteIssue={deleteIssue} />
-		<Lane name="Archive" color="bg-gray-50" issues={archiveIssues} updateStatus={updateStatus} deleteIssue={deleteIssue} />
+		<Lane name="Do" color="bg-blue-50" issues={doIssues} {updateStatus} {deleteIssue} />
+		<Lane name="Doing" color="bg-yellow-50" issues={doingIssues} {updateStatus} {deleteIssue} />
+		<Lane name="Done" color="bg-green-50" issues={doneIssues} {updateStatus} {deleteIssue} />
+		<Lane name="Archive" color="bg-gray-50" issues={archiveIssues} {updateStatus} {deleteIssue} />
 	</div>
 
 	{#if showDialog}
