@@ -2,7 +2,7 @@
 	let { countryData, onCreateOpen } = $props();
 </script>
 
-<header class="flex items-center justify-between bg-gray-800 p-4 text-white">
+<header class="flex items-center justify-between bg-zinc-200 p-4 text-gray-800">
 	<span>
 		{countryData.country}
 		{#if countryData.flag}

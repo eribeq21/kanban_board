@@ -39,12 +39,17 @@
 
 		try {
 			const response = await fetch(
-				`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&orientation=landscape&per_page=1`,
+				`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&orientation=landscape&per_page=30`,
 				{ headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` } }
 			);
 			const data = await response.json();
 
-			backgroundUrl = data.results.length > 0 ? data.results[0].urls.full : DEFAULT_BACKGROUND;
+			if (data.results.length > 0) {
+				const randomIndex = Math.floor(Math.random() * data.results.length);
+				backgroundUrl = data.results[randomIndex].urls.full;
+			} else {
+				backgroundUrl = DEFAULT_BACKGROUND;
+			}
 		} catch (error) {
 			console.error('Unsplash error:', error);
 			backgroundUrl = DEFAULT_BACKGROUND;
