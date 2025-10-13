@@ -54,25 +54,49 @@
 		<p><strong>Status:</strong> {issue.status}</p>
 	</div>
 
-	<!-- Buttons (appear on hover) -->
-	<div class="absolute top-2 right-2 flex gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+	<!-- Vintage style action buttons -->
+	<div class="absolute top-2 right-2 flex gap-1">
 		<button
-			class="rounded-full bg-white/60 p-1 text-green-600 shadow hover:bg-white hover:shadow-md"
+			class="px-1.5 py-1 text-green-700 transition-all hover:scale-105 cursor-pointer"
+			style="
+				background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+				border: 1px solid rgba(34, 197, 94, 0.3);
+				border-radius: 2px;
+				box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+				transform: rotate(-2deg);
+			"
 			onclick={() => shareIssue(issue)}
+			title="Share"
 		>
-			<Share2 size={14} />
+			<Share2 size={12} />
 		</button>
 		<button
-			class="rounded-full bg-white/60 p-1 text-blue-600 shadow hover:bg-white hover:shadow-md"
+			class="px-1.5 py-1 text-blue-700 transition-all hover:scale-105 cursor-pointer"
+			style="
+				background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+				border: 1px solid rgba(59, 130, 246, 0.3);
+				border-radius: 2px;
+				box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+				transform: rotate(1deg);
+			"
 			onclick={() => exportICS(issue)}
+			title="Export to Calendar"
 		>
-			<Calendar size={14} />
+			<Calendar size={12} />
 		</button>
 		<button
-			class="rounded-full bg-white/60 p-1 text-red-600 shadow hover:bg-white hover:shadow-md"
+			class="px-1.5 py-1 text-red-700 transition-all hover:scale-105 cursor-pointer"
+			style="
+				background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+				border: 1px solid rgba(239, 68, 68, 0.3);
+				border-radius: 2px;
+				box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+				transform: rotate(-1.5deg);
+			"
 			onclick={() => deleteIssue(issue.id)}
+			title="Delete"
 		>
-			<Trash2 size={14} />
+			<Trash2 size={12} />
 		</button>
 	</div>
 </div>

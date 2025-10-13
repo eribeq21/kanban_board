@@ -1,37 +1,49 @@
 <script>
-    import { Pin, Paperclip } from 'lucide-svelte';
+    import { Pin, StickyNote } from 'lucide-svelte';
 	let { countryData, onCreateOpen } = $props();
 </script>
 
 <header
-	class="relative flex items-center justify-between px-6 py-3 border-b border-gray-400 shadow-inner bg-gradient-to-b from-stone-200 to-stone-300"
-	style="font-family: 'Permanent Marker', cursive;"
+	class="relative flex items-center justify-between px-5 py-2.5 border-b border-gray-300 shadow-sm"
+	style="
+		font-family: 'Permanent Marker', cursive;
+		background: linear-gradient(180deg, #faf8f3 0%, #f5f1e8 100%);
+	"
 >
-	<!-- Decorative pins -->
-	<div class="absolute top-1 left-4 text-gray-500 opacity-60">
-		<Pin size={18} />
+	<!-- Subtle paper texture -->
+	<div 
+		class="absolute inset-0 pointer-events-none opacity-5"
+		style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence baseFrequency=%221.2%22/%3E%3C/filter%3E%3Crect width=%22200%22 height=%22200%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');">
 	</div>
-	<div class="absolute top-1 right-4 text-gray-500 opacity-60">
-		<Paperclip size={18} />
+
+	<!-- Small decorative pins -->
+	<div class="absolute top-1 left-8 text-red-400 opacity-60 z-10">
+		<Pin size={12} fill="currentColor" />
+	</div>
+	<div class="absolute top-1 right-8 text-blue-400 opacity-60 z-10" style="transform: rotate(18deg);">
+		<Pin size={12} fill="currentColor" />
 	</div>
 
 	<!-- Country label -->
-	<div class="flex items-center gap-2">
+	<div class="flex items-center gap-2 relative z-10">
 		{#if countryData.flag}
 			<img
 				src={countryData.flag}
 				alt="{countryData.country} flag"
-				class="h-6 w-6 rounded shadow-sm border border-gray-400"
+				class="h-4 w-4 rounded-sm shadow-sm border border-gray-300"
 			/>
 		{/if}
-		<span class="text-lg tracking-wide">{countryData.country}</span>
+		<span class="text-sm tracking-wide text-gray-700">{countryData.country}</span>
 	</div>
 
-	<!-- Button -->
+	<!-- Simple button -->
 	<button
 		onclick={onCreateOpen}
-		class="rounded bg-yellow-200/70 border border-yellow-400 px-3 py-1 text-sm font-semibold text-gray-800 shadow-[2px_2px_0_rgba(0,0,0,0.2)] transition hover:translate-y-[1px] hover:shadow-[1px_1px_0_rgba(0,0,0,0.2)] active:translate-y-[2px]"
+		class="relative flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-700 
+		bg-amber-100 border border-amber-300 rounded-sm shadow-sm 
+		hover:bg-amber-200 transition-all z-10"
 	>
-		 Add Card
+		<StickyNote size={13} />
+		Add Card
 	</button>
 </header>
