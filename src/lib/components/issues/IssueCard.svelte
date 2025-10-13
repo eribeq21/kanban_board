@@ -25,7 +25,7 @@
 	role="article"
 	draggable="true"
 	ondragstart={(e) => e.dataTransfer.setData('text/plain', issue.id)}
-	class={`group relative mb-6 w-56 cursor-move select-none rounded-md p-4 text-gray-800 shadow-[2px_4px_8px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[4px_6px_12px_rgba(0,0,0,0.25)] ${randomColor} ${overdue ? 'ring-2 ring-red-400' : ''}`}
+	class={`group relative mb-4 w-40 cursor-move select-none rounded-md p-3 text-gray-800 shadow-[2px_4px_8px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[4px_6px_12px_rgba(0,0,0,0.25)] ${randomColor} ${overdue ? 'ring-2 ring-red-400' : ''}`}
 	style="transform: rotate({randomRotation}deg);"
 >
 	<!-- Paper gradient to simulate texture -->
@@ -38,16 +38,16 @@
 	></div>
 
 	<!-- Note Content -->
-	<h3 class="mb-2 text-base font-semibold">
+	<h3 class="mb-1.5 text-sm font-semibold">
 		{issue.title}
 		{#if overdue}
-			<span class="ml-2 text-xs text-red-600">(Overdue)</span>
+			<span class="ml-1 text-xs text-red-600">(Overdue)</span>
 		{/if}
 	</h3>
 
-	<p class="mb-3 text-sm leading-snug">{issue.description}</p>
+	<p class="mb-2 text-xs leading-snug">{issue.description}</p>
 
-	<div class="space-y-1 text-xs">
+	<div class="space-y-0.5 text-xs">
 		<p><strong>Due:</strong> {formatDate(issue.dueDate)}</p>
 		<p><strong>Points:</strong> {issue.storyPoints}</p>
 		<p><strong>Priority:</strong> {issue.priority}</p>

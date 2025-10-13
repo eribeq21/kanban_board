@@ -144,9 +144,12 @@
 		{/if}
 	</div>
 
-	{#each issues as issue (issue.id)}
-		<IssueCard {issue} {deleteIssue} />
-	{/each}
+	<!-- Cards container with flex wrap for multiple columns -->
+	<div class="flex flex-wrap gap-3 justify-start">
+		{#each issues as issue (issue.id)}
+			<IssueCard {issue} {deleteIssue} />
+		{/each}
+	</div>
 </div>
 
 <style>
