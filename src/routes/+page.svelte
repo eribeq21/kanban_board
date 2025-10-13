@@ -9,6 +9,7 @@
 	// Utils
 	import { loadIssues, saveIssues } from '$lib/utils/storage.js';
 	import { getCountry } from '$lib/utils/geoUtils.js';
+  import { showDoneNotification } from '$lib/utils/notifications.js';
 
 	// Constants
 	const UNSPLASH_KEY = 'VembbgeQ3PYT_PjTuMDWhUMIOXB2JWaj2D4IchDJZGM';
@@ -76,10 +77,14 @@
 	}
 
 	function updateStatus(id, newStatus) {
-		const issue = issues.find((i) => i.id === id);
-		if (issue) issue.status = newStatus;
-	}
-
+    const issue = issues.find((i) => i.id === id);
+    if (issue) {
+      issue.status = newStatus;
+      if (newStatus === 'Done') {
+        showDoneNotification(issue); // Call notification
+      }
+    }
+  }
 	function deleteIssue(id) {
 		issues = issues.filter((i) => i.id !== id);
 	}
