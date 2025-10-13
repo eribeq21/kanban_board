@@ -92,18 +92,45 @@
 		saveIssues(issues);
 	});
 </script>
-
-<main class="flex h-screen flex-col">
+<main
+	class="flex h-screen flex-col bg-gradient-to-br from-gray-50 to-gray-200 text-gray-800 font-sans"
+>
+	<!-- Header -->
 	<Header {countryData} onCreateOpen={() => (showDialog = true)} />
-	
+
+	<!-- Board Area -->
 	<div
-		class="flex flex-1 overflow-auto bg-cover bg-center"
-		style="background-image: url('{backgroundUrl}');"
+		class="flex flex-1 overflow-auto bg-white/80 backdrop-blur-sm border-t border-b border-gray-300 shadow-inner"
+		style="background-image: radial-gradient(circle at top left, rgba(255,255,255,0.9), rgba(240,240,240,0.8));"
 	>
-		<Lane name="Do" color="bg-blue-200/30" issues={doIssues} {updateStatus} {deleteIssue} />
-		<Lane name="Doing" color="bg-yellow-200/30" issues={doingIssues} {updateStatus} {deleteIssue} />
-		<Lane name="Done" color="bg-green-200/30" issues={doneIssues} {updateStatus} {deleteIssue} />
-		<Lane name="Archive" color="bg-gray-200/30" issues={archiveIssues} {updateStatus} {deleteIssue} />
+		<Lane
+			name="Do"
+			color="bg-blue-50"
+			issues={doIssues}
+			{updateStatus}
+			{deleteIssue}
+		/>
+		<Lane
+			name="Doing"
+			color="bg-yellow-50"
+			issues={doingIssues}
+			{updateStatus}
+			{deleteIssue}
+		/>
+		<Lane
+			name="Done"
+			color="bg-green-50"
+			issues={doneIssues}
+			{updateStatus}
+			{deleteIssue}
+		/>
+		<Lane
+			name="Archive"
+			color="bg-gray-50"
+			issues={archiveIssues}
+			{updateStatus}
+			{deleteIssue}
+		/>
 	</div>
 
 	{#if showDialog}
