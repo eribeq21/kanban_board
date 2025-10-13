@@ -1,11 +1,14 @@
 <script>
-	import { Trash2, Calendar, Share2 } from 'lucide-svelte';
+	import { Trash2, Calendar, Share2, AlertTriangle } from 'lucide-svelte';
 	import { exportICS, shareIssue } from '$lib/utils/exportUtils.js';
 	import { isOverdue, formatDate } from '$lib/utils/dateUtils.js';
 	import { formatDistanceToNow } from 'date-fns';
 
 	let { issue, deleteIssue } = $props();
 	let overdue = $derived(isOverdue(issue.dueDate));
+	
+	// Only show overdue banner if the issue is not done
+	let showOverdueBanner = $derived(overdue && issue.status !== 'Done' && issue.status !== 'Archive');
 
 	// Format relative time for creation date
 	let createdAgo = $derived(
@@ -33,7 +36,7 @@
 	role="article"
 	draggable="true"
 	ondragstart={(e) => e.dataTransfer.setData('text/plain', issue.id)}
-	class={`group relative mb-4 w-40 cursor-move select-none rounded-md p-3 text-gray-800 shadow-[2px_4px_8px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[4px_6px_12px_rgba(0,0,0,0.25)] ${randomColor} ${overdue ? 'ring-2 ring-red-400' : ''}`}
+	class={`group relative mb-4 w-40 cursor-move select-none rounded-md p-3 text-gray-800 shadow-[2px_4px_8px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[4px_6px_12px_rgba(0,0,0,0.25)] ${randomColor} ${showOverdueBanner ? 'ring-2 ring-red-400' : ''}`}
 	style="transform: rotate({randomRotation}deg);"
 >
 	<!-- Paper gradient to simulate texture -->
@@ -45,12 +48,32 @@
 		style="clip-path: polygon(100% 0, 0% 100%, 100% 100%);"
 	></div>
 
+	<!-- Diagonal OVERDUE banner -->
+	{#if showOverdueBanner}
+		<div 
+			class="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+			style="transform: rotate(-15deg);"
+		>
+			<div 
+				class="flex items-center gap-1.5 px-4 py-1 font-bold text-white text-xs uppercase tracking-wide"
+				style="
+					background: linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.95) 100%);
+					border-top: 2px solid rgba(255, 255, 255, 0.3);
+					border-bottom: 2px solid rgba(0, 0, 0, 0.3);
+					box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+					text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+				"
+			>
+				<AlertTriangle size={14} />
+				<span>Overdue</span>
+				<AlertTriangle size={14} />
+			</div>
+		</div>
+	{/if}
+
 	<!-- Note Content -->
 	<h3 class="mb-1.5 text-sm font-semibold">
 		{issue.title}
-		{#if overdue}
-			<span class="ml-1 text-xs text-red-600">(Overdue)</span>
-		{/if}
 	</h3>
 
 	<p class="mb-2 text-xs leading-snug">{issue.description}</p>
