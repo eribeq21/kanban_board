@@ -2,9 +2,17 @@
 	import { Trash2, Calendar, Share2 } from 'lucide-svelte';
 	import { exportICS, shareIssue } from '$lib/utils/exportUtils.js';
 	import { isOverdue, formatDate } from '$lib/utils/dateUtils.js';
+	import { formatDistanceToNow } from 'date-fns';
 
 	let { issue, deleteIssue } = $props();
 	let overdue = $derived(isOverdue(issue.dueDate));
+
+	// Format relative time for creation date
+	let createdAgo = $derived(
+		issue.creationDate 
+			? formatDistanceToNow(new Date(issue.creationDate), { addSuffix: true })
+			: 'Unknown'
+	);
 
 	// Random pastel colors for sticky notes
 	const colors = [
@@ -48,6 +56,7 @@
 	<p class="mb-2 text-xs leading-snug">{issue.description}</p>
 
 	<div class="space-y-0.5 text-xs">
+		<p><strong>Created:</strong> {issue.creationDate ? formatDate(issue.creationDate) : 'N/A'} <span class="text-gray-600 italic">({createdAgo})</span></p>
 		<p><strong>Due:</strong> {formatDate(issue.dueDate)}</p>
 		<p><strong>Points:</strong> {issue.storyPoints}</p>
 		<p><strong>Priority:</strong> {issue.priority}</p>
