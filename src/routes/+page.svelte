@@ -10,6 +10,7 @@
 	import { loadIssues, saveIssues } from '$lib/utils/storage.js';
 	import { getCountry } from '$lib/utils/geoUtils.js';
   import { showDoneNotification } from '$lib/utils/notifications.js';
+  import { exportCSV } from '$lib/utils/exportUtils.js';
 
 	// Constants
 	const UNSPLASH_KEY = 'VembbgeQ3PYT_PjTuMDWhUMIOXB2JWaj2D4IchDJZGM';
@@ -96,17 +97,24 @@
 	$effect(() => {
 		saveIssues(issues);
 	});
+
+  // Callback for CSV export
+  function handleExportCSV() {
+    exportCSV(issues);
+  }
+
 </script>
+
+
 <main
 	class="flex h-screen flex-col bg-gradient-to-br from-gray-50 to-gray-200 text-gray-800 font-sans"
 >
 	<!-- Header -->
-	<Header {countryData} onCreateOpen={() => (showDialog = true)} />
+	<Header {countryData} onCreateOpen={() => (showDialog = true)}  onExportCSV={handleExportCSV} />
 
 	<!-- Board Area -->
 	<div
 		class="flex flex-1 overflow-auto bg-white/80 backdrop-blur-sm border-t border-b border-gray-300 shadow-inner"
-		style="background-image: radial-gradient(circle at top left, rgba(255,255,255,0.9), rgba(240,240,240,0.8));"
 	>
 		<Lane
 			name="Do"
@@ -137,6 +145,7 @@
 			{deleteIssue}
 		/>
 	</div>
+
 
 	{#if showDialog}
 		<CreateIssueDialog onCreate={addIssue} onClose={() => (showDialog = false)} />

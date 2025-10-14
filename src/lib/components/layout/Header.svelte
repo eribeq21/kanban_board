@@ -1,6 +1,6 @@
 <script>
-    import { Pin, StickyNote } from 'lucide-svelte';
-	let { countryData, onCreateOpen } = $props();
+    import { Pin, StickyNote, FileDown } from 'lucide-svelte';
+	let { countryData, onCreateOpen , onExportCSV } = $props();
 </script>
 
 <header
@@ -36,14 +36,28 @@
 		<span class="text-sm tracking-wide text-gray-700">{countryData.country}</span>
 	</div>
 
-	<!-- Simple button -->
-	<button
-		onclick={onCreateOpen}
-		class="relative flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-700 
-		bg-amber-100 border border-amber-300 rounded-sm shadow-sm 
-		hover:bg-amber-200 transition-all z-10"
-	>
-		<StickyNote size={13} />
-		Add Card
-	</button>
+	<!-- Buttons container -->
+	<div class="flex items-center gap-2 relative z-10">
+		<!-- Export CSV button -->
+		<button
+			onclick={onExportCSV}
+			class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-700 
+			bg-blue-100 border border-blue-300 rounded-sm shadow-sm 
+			hover:bg-blue-200 transition-all"
+		>
+			<FileDown size={13} />
+			Export CSV
+		</button>
+
+		<!-- Add Card button -->
+		<button
+			onclick={onCreateOpen}
+			class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-gray-700 
+			bg-amber-100 border border-amber-300 rounded-sm shadow-sm 
+			hover:bg-amber-200 transition-all"
+		>
+			<StickyNote size={13} />
+			Add Card
+		</button>
+	</div>
 </header>
