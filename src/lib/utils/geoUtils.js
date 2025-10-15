@@ -1,8 +1,18 @@
 export async function getCountry() {
 	const API_KEY = '1625a5fc9c4240fdbe1726a04343e712';
+	const CACHE_KEY = 'cached-country-data';
 
+	// Try to get cached data first
+	const cachedData = localStorage.getItem(CACHE_KEY);
+	
 	return new Promise((resolve, reject) => {
 		if (!navigator.geolocation) {
+			// If offline and cached, use cached data
+			if (cachedData) {
+				const parsed = JSON.parse(cachedData);
+				resolve({ ...parsed, isOffline: true });
+				return;
+			}
 			reject(new Error('Geolocation not supported'));
 			return;
 		}
@@ -25,13 +35,30 @@ export async function getCountry() {
 						flag = flagData[0]?.flags?.png || null;
 					}
 
-					resolve({ country, city, flag });
+					const result = { country, city, flag, isOffline: false };
+					
+					// Cache the result for offline use
+					localStorage.setItem(CACHE_KEY, JSON.stringify(result));
+					
+					resolve(result);
 				} catch (error) {
-					reject(error);
+					// If API fails (offline), use cached data
+					if (cachedData) {
+						const parsed = JSON.parse(cachedData);
+						resolve({ ...parsed, isOffline: true });
+					} else {
+						reject(error);
+					}
 				}
 			},
 			(error) => {
-				reject(error);
+				// If geolocation fails but we have cache, use it
+				if (cachedData) {
+					const parsed = JSON.parse(cachedData);
+					resolve({ ...parsed, isOffline: true });
+				} else {
+					reject(error);
+				}
 			},
 			{ enableHighAccuracy: true, timeout: 5000 }
 		);

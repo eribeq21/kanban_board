@@ -9,8 +9,8 @@
 	// Utils
 	import { loadIssues, saveIssues } from '$lib/utils/storage.js';
 	import { getCountry } from '$lib/utils/geoUtils.js';
-  import { showDoneNotification } from '$lib/utils/notifications.js';
-  import { exportCSV } from '$lib/utils/exportUtils.js';
+	import { showDoneNotification } from '$lib/utils/notifications.js';
+	import { exportCSV } from '$lib/utils/exportUtils.js';
 
 	// Constants
 	const UNSPLASH_KEY = 'VembbgeQ3PYT_PjTuMDWhUMIOXB2JWaj2D4IchDJZGM';
@@ -64,10 +64,28 @@
 		try {
 			const data = await getCountry();
 			countryData = data;
+			
+			// Log if we're using cached data
+			if (data.isOffline) {
+				console.log(' Using cached location data (offline mode)');
+			} else {
+				console.log(' Location detected:', data.country);
+			}
+			
 			await fetchBackgroundImage(data.country);
 		} catch (error) {
 			console.error('Geolocation error:', error.message);
-			countryData = { country: 'Unknown', city: 'Unknown', flag: null };
+			countryData = { country: 'Unknown', city: 'Unknown', flag: null, isOffline: false };
+		}
+
+		// Register Service Worker for PWA
+		if ('serviceWorker' in navigator) {
+			try {
+				await navigator.serviceWorker.register('/service-worker.js');
+				console.log(' PWA Service Worker registered');
+			} catch (error) {
+				console.error(' Service Worker registration failed:', error);
+			}
 		}
 	}
 

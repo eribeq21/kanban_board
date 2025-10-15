@@ -34,6 +34,14 @@
 			/>
 		{/if}
 		<span class="text-sm tracking-wide text-gray-700">{countryData.country}</span>
+		{#if countryData.isOffline}
+			<span 
+				class="px-1.5 py-0.5 text-[10px] font-semibold text-orange-700 bg-orange-100 border border-orange-300 rounded-sm"
+				title="Using cached location data (offline)"
+			>
+				OFFLINE
+			</span>
+		{/if}
 	</div>
 
 	<!-- Buttons container -->
