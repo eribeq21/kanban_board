@@ -1,38 +1,28 @@
-# sv
+# Kanban Board
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A clean kanban board for managing tasks. Built with SvelteKit for simplicity and performance.
 
-## Creating a project
+## Description
 
-If you're seeing this, you've probably already done this step. Congrats!
+This is a task management app that uses the classic kanban workflow - Do, Doing, Done, Archive. Tasks can be dragged and dropped between columns for quick status updates.
 
-```sh
-# create a new project in the current directory
-npx sv create
+The board features a vintage sticky-note aesthetic with slight card rotations and random pastel colors to create a more organic feel.
 
-# create a new project in my-app
-npx sv create my-app
-```
+The app detects the user's location and fetches a background image from Unsplash based on their country. This adds a personalized touch to the interface. The app works offline by caching location data and runs as a PWA.
 
-## Developing
+## Features
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+- **Drag & Drop** - Move tasks between columns with your mouse
+- **Persistent Storage** - Everything saves to localStorage automatically
+- **Due Dates** - Set deadlines and get visual warnings when tasks are overdue
+- **Export Options** - Download tasks as CSV or export individual tasks as calendar events (.ics)
+- **Share Tasks** - Use the native share API to send task details
+- **Offline Support** - Works offline with service worker caching
+- **Location-Based Backgrounds** - Dynamic backgrounds based on your location via Unsplash
+- **PWA Ready** - Install it as a standalone app on desktop or mobile
 
-```sh
-npm run dev
+## Setup
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
 
-## Building
+That's it. The app uses localStorage for data persistence, so no backend setup needed.
 
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
