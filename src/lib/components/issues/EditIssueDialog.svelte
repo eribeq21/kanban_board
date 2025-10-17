@@ -36,18 +36,19 @@
 			cardColor
 		});
 	}
+
+	// Get dialog background based on card color (reactive)
+	let dialogBg = $derived(cardColor || 'bg-yellow-200');
 </script>
 
 <dialog open class="issue-dialog">
 	<div
-		class="relative w-80 rounded-sm p-6 text-gray-800
+		class={`relative w-80 rounded-sm p-6 text-gray-800
 		transition-all duration-300 
-		bg-blue-100
 		shadow-[4px_6px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.5)]
-		border-t border-l border-blue-200"
+		border-t border-l ${dialogBg}`}
 		style="
 			transform: rotate(1.2deg);
-			background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 30%, #dbeafe 70%, #93c5fd 100%);
 		"
 	>
 		<!-- Paper texture overlay -->
@@ -66,17 +67,17 @@
 
 		<!-- Top folded corner -->
 		<div
-			class="pointer-events-none absolute top-0 right-0 h-10 w-10"
+			class={`pointer-events-none absolute top-0 right-0 h-10 w-10 ${dialogBg}`}
 			style="
 				clip-path: polygon(100% 0, 0 0, 100% 100%);
-				background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
 				box-shadow: -2px 2px 4px rgba(0,0,0,0.15);
+				filter: brightness(0.9);
 			"
 		></div>
 
 		<!-- Header with icon -->
 		<div class="mb-5 flex items-center gap-2 relative z-10">
-			<Edit class="text-blue-600" size={24} />
+			<Edit class="text-gray-700" size={24} />
 			<h2 class="text-lg font-semibold text-gray-800">Edit Issue</h2>
 		</div>
 

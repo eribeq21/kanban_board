@@ -47,14 +47,12 @@
 
 <dialog open class="issue-dialog">
 	<div
-		class="relative w-80 rounded-sm p-6 text-gray-800
+		class={`relative w-80 rounded-sm p-6 text-gray-800
 		transition-all duration-300 
-		bg-yellow-100
 		shadow-[4px_6px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.5)]
-		border-t border-l border-yellow-200"
+		border-t border-l ${cardColor}`}
 		style="
 			transform: rotate(-1.2deg);
-			background: linear-gradient(135deg, #fef3c7 0%, #fde68a 30%, #fef3c7 70%, #fde047 100%);
 		"
 	>
 		<!-- Paper texture overlay -->
@@ -73,10 +71,10 @@
 
 		<!-- Top folded corner -->
 		<div
-			class="pointer-events-none absolute top-0 right-0 h-10 w-10"
+			class={`pointer-events-none absolute top-0 right-0 h-10 w-10 ${cardColor}`}
 			style="
 				clip-path: polygon(100% 0, 0 0, 100% 100%);
-				background: linear-gradient(135deg, #fef3c7 0%, #fde68a 50%, #d4a574 100%);
+				filter: brightness(0.85);
 				box-shadow: -2px 2px 4px rgba(0,0,0,0.15);
 			"
 		></div>
