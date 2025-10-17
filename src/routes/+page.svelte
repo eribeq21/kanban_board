@@ -67,18 +67,12 @@
 		try {
 			const data = await getCountry();
 			countryData = data;
-			
-			// Log if we're using cached data
-			if (data.isOffline) {
-				console.log(' Using cached location data (offline mode)');
-			} else {
-				console.log(' Location detected:', data.country);
-			}
+			console.log('📍 Location detected:', data.country);
 			
 			await fetchBackgroundImage(data.country);
 		} catch (error) {
 			console.error('Geolocation error:', error.message);
-			countryData = { country: 'Unknown', city: 'Unknown', flag: null, isOffline: false };
+			countryData = { country: 'Unknown', city: 'Unknown', flag: null };
 		}
 
 		// Register Service Worker for PWA
