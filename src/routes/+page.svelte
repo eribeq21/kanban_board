@@ -6,6 +6,7 @@
 	import CreateIssueDialog from '$lib/components/issues/CreateIssueDialog.svelte';
 	import EditIssueDialog from '$lib/components/issues/EditIssueDialog.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
+	import { ChevronDown } from 'lucide-svelte';
 
 	// Utils
 	import { loadIssues, saveIssues } from '$lib/utils/storage.js';
@@ -31,6 +32,8 @@
 	let editingIssue = $state(null);
 	let countryData = $state({ country: 'Loading...', flag: null });
 	let backgroundUrl = $state('');
+	let showScrollIndicator = $state(true);
+	let boardContainer = $state(null);
 
 	// Derived filtered issues for each lane
 	let doIssues = $derived(issues.filter((issue) => issue.status === 'Do'));
@@ -67,7 +70,7 @@
 		try {
 			const data = await getCountry();
 			countryData = data;
-			console.log('📍 Location detected:', data.country);
+			console.log('Location detected:', data.country);
 			
 			await fetchBackgroundImage(data.country);
 		} catch (error) {
@@ -119,6 +122,39 @@
 		editingIssue = null;
 	}
 
+	// Handle scroll to check if we should show the indicator
+	function handleScroll(e) {
+		const element = e.target;
+		const scrollTop = element.scrollTop;
+		const scrollHeight = element.scrollHeight;
+		const clientHeight = element.clientHeight;
+		
+		// Hide indicator if scrolled more than 100px or near bottom
+		if (scrollTop > 100 || scrollTop + clientHeight >= scrollHeight - 50) {
+			showScrollIndicator = false;
+		} else {
+			showScrollIndicator = true;
+		}
+	}
+
+	// Check if there's content to scroll
+	$effect(() => {
+		if (boardContainer) {
+			const hasScroll = boardContainer.scrollHeight > boardContainer.clientHeight;
+			showScrollIndicator = hasScroll;
+		}
+	});
+
+	// Smooth scroll down when indicator is clicked
+	function scrollDown() {
+		if (boardContainer) {
+			boardContainer.scrollBy({
+				top: boardContainer.clientHeight * 0.8,
+				behavior: 'smooth'
+			});
+		}
+	}
+
 	// Lifecycle
 	onMount(init);
 
@@ -143,7 +179,9 @@
 
 	<!-- Board Area -->
 	<div
-		class="flex-1 overflow-auto bg-white/80 backdrop-blur-sm border-t border-b border-gray-300 shadow-inner"
+		bind:this={boardContainer}
+		onscroll={handleScroll}
+		class="flex-1 overflow-auto bg-white/80 backdrop-blur-sm border-t border-b border-gray-300 shadow-inner relative"
 	>
 		<div class="flex min-h-full">
 			<Lane
@@ -179,6 +217,28 @@
 				{editIssue}
 			/>
 		</div>
+
+		<!-- Scroll Indicator - Vintage Style -->
+		{#if showScrollIndicator && issues.length > 3}
+			<button
+				onclick={scrollDown}
+				class="absolute bottom-3 left-1/2 -translate-x-1/2 z-50 cursor-pointer hover:scale-110 transition-transform"
+			>
+				<div 
+					class="px-2 py-1 text-[10px] flex items-center gap-1 text-gray-700"
+					style="
+						background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc0 100%);
+						border: 1px solid rgba(139, 92, 46, 0.3);
+						border-radius: 2px;
+						box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+						transform: rotate(-0.5deg);
+					"
+				>
+					<ChevronDown size={10} />
+					<span>Keep scrolling</span>
+				</div>
+			</button>
+		{/if}
 	</div>
 
 
