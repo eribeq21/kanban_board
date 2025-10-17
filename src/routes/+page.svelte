@@ -4,6 +4,7 @@
 	// Components
 	import Lane from '$lib/components/lanes/Lane.svelte';
 	import CreateIssueDialog from '$lib/components/issues/CreateIssueDialog.svelte';
+	import EditIssueDialog from '$lib/components/issues/EditIssueDialog.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
 
 	// Utils
@@ -26,6 +27,8 @@
 	// State
 	let issues = $state([]);
 	let showDialog = $state(false);
+	let showEditDialog = $state(false);
+	let editingIssue = $state(null);
 	let countryData = $state({ country: 'Loading...', flag: null });
 	let backgroundUrl = $state('');
 
@@ -108,6 +111,20 @@
 		issues = issues.filter((i) => i.id !== id);
 	}
 
+	function editIssue(issue) {
+		editingIssue = issue;
+		showEditDialog = true;
+	}
+
+	function updateIssue(updatedIssue) {
+		const index = issues.findIndex((i) => i.id === updatedIssue.id);
+		if (index !== -1) {
+			issues[index] = updatedIssue;
+		}
+		showEditDialog = false;
+		editingIssue = null;
+	}
+
 	// Lifecycle
 	onMount(init);
 
@@ -140,6 +157,7 @@
 			issues={doIssues}
 			{updateStatus}
 			{deleteIssue}
+			{editIssue}
 		/>
 		<Lane
 			name="Doing"
@@ -147,6 +165,7 @@
 			issues={doingIssues}
 			{updateStatus}
 			{deleteIssue}
+			{editIssue}
 		/>
 		<Lane
 			name="Done"
@@ -154,6 +173,7 @@
 			issues={doneIssues}
 			{updateStatus}
 			{deleteIssue}
+			{editIssue}
 		/>
 		<Lane
 			name="Archive"
@@ -161,11 +181,23 @@
 			issues={archiveIssues}
 			{updateStatus}
 			{deleteIssue}
+			{editIssue}
 		/>
 	</div>
 
 
 	{#if showDialog}
 		<CreateIssueDialog onCreate={addIssue} onClose={() => (showDialog = false)} />
+	{/if}
+
+	{#if showEditDialog && editingIssue}
+		<EditIssueDialog 
+			issue={editingIssue} 
+			onUpdate={updateIssue} 
+			onClose={() => {
+				showEditDialog = false;
+				editingIssue = null;
+			}} 
+		/>
 	{/if}
 </main>

@@ -3,7 +3,7 @@
 	import { isOverdue } from '$lib/utils/dateUtils.js';
 	import { ListTodo, Target, TrendingUp, AlertTriangle, Pin } from 'lucide-svelte';
 
-	let { name, color, issues, updateStatus, deleteIssue } = $props();
+	let { name, color, issues, updateStatus, deleteIssue, editIssue } = $props();
 
 	let isOver = $state(false); // For dropzone highlighting
 
@@ -147,7 +147,7 @@
 	<!-- Cards container with flex wrap for multiple columns -->
 	<div class="flex flex-wrap gap-3 justify-start">
 		{#each issues as issue (issue.id)}
-			<IssueCard {issue} {deleteIssue} />
+			<IssueCard {issue} {deleteIssue} {editIssue} />
 		{/each}
 	</div>
 </div>

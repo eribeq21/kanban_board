@@ -1,10 +1,10 @@
 <script>
-	import { Trash2, Calendar, Share2, AlertTriangle } from 'lucide-svelte';
+	import { Trash2, Calendar, Share2, AlertTriangle, Edit } from 'lucide-svelte';
 	import { exportICS, shareIssue } from '$lib/utils/exportUtils.js';
 	import { isOverdue, formatDate } from '$lib/utils/dateUtils.js';
 	import { formatDistanceToNow } from 'date-fns';
 
-	let { issue, deleteIssue } = $props();
+	let { issue, deleteIssue, editIssue } = $props();
 	let overdue = $derived(isOverdue(issue.dueDate));
 	
 	// Only show overdue banner if the issue is not done
@@ -88,6 +88,21 @@
 
 	<!-- Vintage style action buttons -->
 	<div class="absolute top-2 right-2 flex gap-1">
+		<button
+			class="px-1.5 py-1 text-orange-700 transition-all hover:scale-105 cursor-pointer"
+			style="
+				background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+				border: 1px solid rgba(249, 115, 22, 0.3);
+				border-radius: 2px;
+				box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+				transform: rotate(2deg);
+			"
+			onclick={() => editIssue(issue)}
+			title="Edit"
+		>
+			<Edit size={12} />
+			
+		</button>
 		<button
 			class="px-1.5 py-1 text-green-700 transition-all hover:scale-105 cursor-pointer"
 			style="
