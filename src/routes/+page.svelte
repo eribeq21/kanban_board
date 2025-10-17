@@ -143,40 +143,42 @@
 
 	<!-- Board Area -->
 	<div
-		class="flex flex-1 overflow-auto bg-white/80 backdrop-blur-sm border-t border-b border-gray-300 shadow-inner"
+		class="flex-1 overflow-auto bg-white/80 backdrop-blur-sm border-t border-b border-gray-300 shadow-inner"
 	>
-		<Lane
-			name="Do"
-			color="bg-blue-50"
-			issues={doIssues}
-			{updateStatus}
-			{deleteIssue}
-			{editIssue}
-		/>
-		<Lane
-			name="Doing"
-			color="bg-yellow-50"
-			issues={doingIssues}
-			{updateStatus}
-			{deleteIssue}
-			{editIssue}
-		/>
-		<Lane
-			name="Done"
-			color="bg-green-50"
-			issues={doneIssues}
-			{updateStatus}
-			{deleteIssue}
-			{editIssue}
-		/>
-		<Lane
-			name="Archive"
-			color="bg-gray-50"
-			issues={archiveIssues}
-			{updateStatus}
-			{deleteIssue}
-			{editIssue}
-		/>
+		<div class="flex min-h-full">
+			<Lane
+				name="Do"
+				color="bg-blue-50"
+				issues={doIssues}
+				{updateStatus}
+				{deleteIssue}
+				{editIssue}
+			/>
+			<Lane
+				name="Doing"
+				color="bg-yellow-50"
+				issues={doingIssues}
+				{updateStatus}
+				{deleteIssue}
+				{editIssue}
+			/>
+			<Lane
+				name="Done"
+				color="bg-green-50"
+				issues={doneIssues}
+				{updateStatus}
+				{deleteIssue}
+				{editIssue}
+			/>
+			<Lane
+				name="Archive"
+				color="bg-gray-50"
+				issues={archiveIssues}
+				{updateStatus}
+				{deleteIssue}
+				{editIssue}
+			/>
+		</div>
 	</div>
 
 

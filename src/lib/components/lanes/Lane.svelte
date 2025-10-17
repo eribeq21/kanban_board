@@ -34,7 +34,7 @@
 </script>
 <div
 	role="region"
-	class={`lane-container flex-1 relative border-r border-gray-400/50 p-4 
+	class={`lane-container flex-1 relative border-r border-gray-400/50 p-4 min-h-full
 		bg-[radial-gradient(circle_at_1px_1px,_#d1d5db_1px,_transparent_0)] 
 		[background-size:20px_20px] 
 		${color} ${isOver ? 'border-2 border-dashed border-blue-500' : ''}`}
@@ -145,7 +145,7 @@
 	</div>
 
 	<!-- Cards container with flex wrap for multiple columns -->
-	<div class="flex flex-wrap gap-3 justify-start">
+	<div class="flex flex-wrap gap-3 justify-start items-start">
 		{#each issues as issue (issue.id)}
 			<IssueCard {issue} {deleteIssue} {editIssue} />
 		{/each}
