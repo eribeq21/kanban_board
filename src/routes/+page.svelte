@@ -114,10 +114,7 @@
 	}
 
 	function updateIssue(updatedIssue) {
-		const index = issues.findIndex((i) => i.id === updatedIssue.id);
-		if (index !== -1) {
-			issues[index] = updatedIssue;
-		}
+		issues = issues.map((i) => i.id === updatedIssue.id ? updatedIssue : i);
 		showEditDialog = false;
 		editingIssue = null;
 	}

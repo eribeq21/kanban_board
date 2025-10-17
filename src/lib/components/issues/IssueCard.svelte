@@ -17,26 +17,23 @@
 			: 'Unknown'
 	);
 
-	// Random pastel colors for sticky notes
-	const colors = [
-		'bg-yellow-200',
-		'bg-pink-200',
-		'bg-green-200',
-		'bg-blue-200',
-		'bg-orange-200',
-		'bg-purple-200'
-	];
+	// Reactive card color that updates when issue changes
+	let cardColor = $state(issue.cardColor || 'bg-yellow-200');
+	
+	// Update color when issue prop changes
+	$effect(() => {
+		cardColor = issue.cardColor || 'bg-yellow-200';
+	});
 
-	// Random slight rotation and color per render
+	// Random slight rotation per render
 	const randomRotation = Math.random() * 2 - 1; // between -1 and 1 degrees
-	const randomColor = colors[Math.floor(Math.random() * colors.length)];
 </script>
 
 <div
 	role="article"
 	draggable="true"
 	ondragstart={(e) => e.dataTransfer.setData('text/plain', issue.id)}
-	class={`group relative mb-4 w-40 cursor-move select-none rounded-md p-3 text-gray-800 shadow-[2px_4px_8px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[4px_6px_12px_rgba(0,0,0,0.25)] ${randomColor} ${showOverdueBanner ? 'ring-2 ring-red-400' : ''}`}
+	class={`group relative mb-4 w-40 cursor-move select-none rounded-md p-3 text-gray-800 shadow-[2px_4px_8px_rgba(0,0,0,0.15)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[4px_6px_12px_rgba(0,0,0,0.25)] ${cardColor} ${showOverdueBanner ? 'ring-2 ring-red-400' : ''}`}
 	style="transform: rotate({randomRotation}deg);"
 >
 	<!-- Paper gradient to simulate texture -->

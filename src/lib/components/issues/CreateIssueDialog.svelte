@@ -3,12 +3,23 @@
 	
 	let { onCreate, onClose } = $props();
 
+	// Available colors
+	const colors = [
+		{ name: 'Yellow', class: 'bg-yellow-200', value: 'bg-yellow-200' },
+		{ name: 'Pink', class: 'bg-pink-200', value: 'bg-pink-200' },
+		{ name: 'Green', class: 'bg-green-200', value: 'bg-green-200' },
+		{ name: 'Blue', class: 'bg-blue-200', value: 'bg-blue-200' },
+		{ name: 'Orange', class: 'bg-orange-200', value: 'bg-orange-200' },
+		{ name: 'Purple', class: 'bg-purple-200', value: 'bg-purple-200' }
+	];
+
 	// Local state for inputs
 	let title = $state('');
 	let description = $state('');
 	let dueDate = $state(new Date().toISOString().split('T')[0]); // Default today
 	let storyPoints = $state(1);
 	let priority = $state('Medium');
+	let cardColor = $state('bg-yellow-200');
 
 	function handleCreate() {
 		if (!title) return;
@@ -18,7 +29,8 @@
 			description,
 			dueDate: new Date(dueDate),
 			storyPoints: Number(storyPoints),
-			priority
+			priority,
+			cardColor
 		});
 		reset();
 	}
@@ -29,6 +41,7 @@
 		dueDate = new Date().toISOString().split('T')[0];
 		storyPoints = 1;
 		priority = 'Medium';
+		cardColor = 'bg-yellow-200';
 	}
 </script>
 
@@ -152,6 +165,23 @@
 					<option>Medium</option>
 					<option>High</option>
 				</select>
+			</label>
+
+			<label class="flex flex-col gap-1">
+				<span class="font-medium text-gray-700 flex items-center gap-1.5">
+					<StickyNote size={16} class="text-amber-600" />
+					Card Color
+				</span>
+				<div class="flex gap-2">
+					{#each colors as color}
+						<button
+							type="button"
+							onclick={() => cardColor = color.value}
+							class={`w-10 h-10 rounded-md border-2 transition-all hover:scale-110 ${color.class} ${cardColor === color.value ? 'border-gray-800 ring-2 ring-gray-400' : 'border-gray-300'}`}
+							title={color.name}
+						></button>
+					{/each}
+				</div>
 			</label>
 
 			<div class="mt-4 flex justify-end gap-2">
