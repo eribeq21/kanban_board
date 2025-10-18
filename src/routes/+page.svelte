@@ -15,9 +15,6 @@
 	import { exportCSV } from '$lib/utils/exportUtils.js';
 
 	// Constants
-	const UNSPLASH_KEY = 'VembbgeQ3PYT_PjTuMDWhUMIOXB2JWaj2D4IchDJZGM';
-	const DEFAULT_BACKGROUND = 'https://via.placeholder.com/1920x1080?text=Default+Background';
-	
 	const LANES = [
 		{ name: 'Do', color: 'bg-blue-200/30' },
 		{ name: 'Doing', color: 'bg-yellow-200/30' },
@@ -31,7 +28,6 @@
 	let showEditDialog = $state(false);
 	let editingIssue = $state(null);
 	let countryData = $state({ country: 'Loading...', flag: null });
-	let backgroundUrl = $state('');
 	let showScrollIndicator = $state(true);
 	let boardContainer = $state(null);
 
@@ -42,28 +38,6 @@
 	let archiveIssues = $derived(issues.filter((issue) => issue.status === 'Archive'));
 
 	// API calls
-	async function fetchBackgroundImage(country) {
-		const query = `${country} landscape`;
-
-		try {
-			const response = await fetch(
-				`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&orientation=landscape&per_page=30`,
-				{ headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` } }
-			);
-			const data = await response.json();
-
-			if (data.results.length > 0) {
-				const randomIndex = Math.floor(Math.random() * data.results.length);
-				backgroundUrl = data.results[randomIndex].urls.full;
-			} else {
-				backgroundUrl = DEFAULT_BACKGROUND;
-			}
-		} catch (error) {
-			console.error('Unsplash error:', error);
-			backgroundUrl = DEFAULT_BACKGROUND;
-		}
-	}
-
 	async function init() {
 		issues = loadIssues();
 
@@ -71,8 +45,6 @@
 			const data = await getCountry();
 			countryData = data;
 			console.log('Location detected:', data.country);
-			
-			await fetchBackgroundImage(data.country);
 		} catch (error) {
 			console.error('Geolocation error:', error.message);
 			countryData = { country: 'Unknown', city: 'Unknown', flag: null };
