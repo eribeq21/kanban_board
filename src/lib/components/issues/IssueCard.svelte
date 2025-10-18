@@ -1,21 +1,14 @@
 <script>
-	import { Trash2, Calendar, Share2, AlertTriangle, Edit } from 'lucide-svelte';
-	import { exportICS, shareIssue } from '$lib/utils/exportUtils.js';
-	import { isOverdue, formatDate } from '$lib/utils/dateUtils.js';
-	import { formatDistanceToNow } from 'date-fns';
+	import { isOverdue } from '$lib/utils/dateUtils.js';
+	import IssueActions from './IssueActions.svelte';
+	import IssueContent from './IssueContent.svelte';
+	import IssueOverdueBanner from './IssueOverdueBanner.svelte';
 
 	let { issue, deleteIssue, editIssue } = $props();
 	let overdue = $derived(isOverdue(issue.dueDate));
 	
 	// Only show overdue banner if the issue is not done
 	let showOverdueBanner = $derived(overdue && issue.status !== 'Done' && issue.status !== 'Archive');
-
-	// Format relative time for creation date
-	let createdAgo = $derived(
-		issue.creationDate 
-			? formatDistanceToNow(new Date(issue.creationDate), { addSuffix: true })
-			: 'Unknown'
-	);
 
 	// Reactive card color that updates when issue changes
 	let cardColor = $state(issue.cardColor || 'bg-yellow-200');
@@ -47,102 +40,12 @@
 
 	<!-- Diagonal OVERDUE banner -->
 	{#if showOverdueBanner}
-		<div 
-			class="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
-			style="transform: rotate(-15deg);"
-		>
-			<div 
-				class="flex items-center gap-1.5 px-4 py-1 font-bold text-white text-xs uppercase tracking-wide"
-				style="
-					background: linear-gradient(135deg, rgba(220, 38, 38, 0.95) 0%, rgba(185, 28, 28, 0.95) 100%);
-					border-top: 2px solid rgba(255, 255, 255, 0.3);
-					border-bottom: 2px solid rgba(0, 0, 0, 0.3);
-					box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-					text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-				"
-			>
-				<AlertTriangle size={14} />
-				<span>Overdue</span>
-				<AlertTriangle size={14} />
-			</div>
-		</div>
+		<IssueOverdueBanner />
 	{/if}
 
-	<!-- Vintage style action buttons -->
-	<div class="absolute top-2 right-2 flex gap-1">
-		<button
-			class="px-1.5 py-1 text-orange-700 transition-all hover:scale-105 cursor-pointer"
-			style="
-				background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
-				border: 1px solid rgba(249, 115, 22, 0.3);
-				border-radius: 2px;
-				box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-				transform: rotate(2deg);
-			"
-			onclick={() => editIssue(issue)}
-			title="Edit"
-		>
-			<Edit size={12} />
-			
-		</button>
-		<button
-			class="px-1.5 py-1 text-green-700 transition-all hover:scale-105 cursor-pointer"
-			style="
-				background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
-				border: 1px solid rgba(34, 197, 94, 0.3);
-				border-radius: 2px;
-				box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-				transform: rotate(-2deg);
-			"
-			onclick={() => shareIssue(issue)}
-			title="Share"
-		>
-			<Share2 size={12} />
-		</button>
-		<button
-			class="px-1.5 py-1 text-blue-700 transition-all hover:scale-105 cursor-pointer"
-			style="
-				background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-				border: 1px solid rgba(59, 130, 246, 0.3);
-				border-radius: 2px;
-				box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-				transform: rotate(1deg);
-			"
-			onclick={() => exportICS(issue)}
-			title="Export to Calendar"
-		>
-			<Calendar size={12} />
-		</button>
-		<button
-			class="px-1.5 py-1 text-red-700 transition-all hover:scale-105 cursor-pointer"
-			style="
-				background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-				border: 1px solid rgba(239, 68, 68, 0.3);
-				border-radius: 2px;
-				box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.4);
-				transform: rotate(-1.5deg);
-			"
-			onclick={() => deleteIssue(issue.id)}
-			title="Delete"
-		>
-			<Trash2 size={12} />
-		</button>
-	</div>
+	<!-- Action buttons -->
+	<IssueActions {issue} {deleteIssue} {editIssue} />
 
-	<!-- Note Content - moved below buttons -->
-	<div class="mt-8">
-		<h3 class="mb-1.5 text-sm font-semibold">
-			{issue.title}
-		</h3>
-
-		<p class="mb-2 text-xs leading-snug">{issue.description}</p>
-
-		<div class="space-y-0.5 text-xs">
-			<p><strong>Created:</strong> {issue.creationDate ? formatDate(issue.creationDate) : 'N/A'} <span class="text-gray-600 italic">({createdAgo})</span></p>
-			<p><strong>Due:</strong> {formatDate(issue.dueDate)}</p>
-			<p><strong>Points:</strong> {issue.storyPoints}</p>
-			<p><strong>Priority:</strong> {issue.priority}</p>
-			<p><strong>Status:</strong> {issue.status}</p>
-		</div>
-	</div>
+	<!-- Issue content -->
+	<IssueContent {issue} />
 </div>
