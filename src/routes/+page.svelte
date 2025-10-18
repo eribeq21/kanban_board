@@ -126,19 +126,21 @@
 		const scrollHeight = element.scrollHeight;
 		const clientHeight = element.clientHeight;
 		
-		// Hide indicator if scrolled more than 100px or near bottom
-		if (scrollTop > 100 || scrollTop + clientHeight >= scrollHeight - 50) {
+		// Hide indicator only when at the bottom (within 20px of the bottom)
+		if (scrollTop + clientHeight >= scrollHeight - 20) {
 			showScrollIndicator = false;
 		} else {
 			showScrollIndicator = true;
 		}
 	}
 
-	// Check if there's content to scroll
+	// Check if there's content to scroll - show button immediately when content is scrollable
 	$effect(() => {
 		if (boardContainer) {
 			const hasScroll = boardContainer.scrollHeight > boardContainer.clientHeight;
-			showScrollIndicator = hasScroll;
+			const isAtBottom = boardContainer.scrollTop + boardContainer.clientHeight >= boardContainer.scrollHeight - 20;
+			// Show button if there's scrollable content AND we're not at the bottom
+			showScrollIndicator = hasScroll && !isAtBottom;
 		}
 	});
 
@@ -214,29 +216,29 @@
 				{editIssue}
 			/>
 		</div>
-
-		<!-- Scroll Indicator - Vintage Style -->
-		{#if showScrollIndicator && issues.length > 3}
-			<button
-				onclick={scrollDown}
-				class="absolute bottom-3 left-1/2 -translate-x-1/2 z-50 cursor-pointer hover:scale-110 transition-transform"
-			>
-				<div 
-					class="px-2 py-1 text-[10px] flex items-center gap-1 text-gray-700"
-					style="
-						background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc0 100%);
-						border: 1px solid rgba(139, 92, 46, 0.3);
-						border-radius: 2px;
-						box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.5);
-						transform: rotate(-0.5deg);
-					"
-				>
-					<ChevronDown size={10} />
-					<span>Keep scrolling</span>
-				</div>
-			</button>
-		{/if}
 	</div>
+
+	<!-- Scroll Indicator - Vintage Style (Fixed to viewport bottom, OUTSIDE scroll container) -->
+	{#if showScrollIndicator}
+		<button
+			onclick={scrollDown}
+			class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 cursor-pointer hover:scale-110 transition-transform"
+		>
+			<div 
+				class="px-2 py-1 text-[10px] flex items-center gap-1 text-gray-700"
+				style="
+					background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc0 100%);
+					border: 1px solid rgba(139, 92, 46, 0.3);
+					border-radius: 2px;
+					box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+					transform: rotate(-0.5deg);
+				"
+			>
+				<ChevronDown size={10} />
+				<span>Keep scrolling</span>
+			</div>
+		</button>
+	{/if}
 
 
 	{#if showDialog}

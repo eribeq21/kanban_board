@@ -1,3 +1,43 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+/* Simple vintage scrollbar styling */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #c9a87d #f5f5dc;
+}
+
+/* Webkit browsers (Chrome, Safari, Edge) */
+*::-webkit-scrollbar {
+	width: 12px;
+	height: 12px;
+}
+
+/* Simple beige track */
+*::-webkit-scrollbar-track {
+	background: #f5f5dc;
+	border-left: 1px solid #d4c19d;
+}
+
+/* Simple brown thumb */
+*::-webkit-scrollbar-thumb {
+	background: #c9a87d;
+	border-radius: 3px;
+	border: 2px solid #f5f5dc;
+}
+
+/* Slightly darker on hover */
+*::-webkit-scrollbar-thumb:hover {
+	background: #b8976c;
+}
+
+/* Even darker when active */
+*::-webkit-scrollbar-thumb:active {
+	background: #a7865b;
+}
+
+/* Simple corner */
+*::-webkit-scrollbar-corner {
+	background: #f5f5dc;
+}

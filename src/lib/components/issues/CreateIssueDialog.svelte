@@ -21,8 +21,62 @@
 	let priority = $state('Medium');
 	let cardColor = $state('bg-yellow-200');
 
+	// Validation state
+	let errors = $state({
+		title: '',
+		description: '',
+		dueDate: ''
+	});
+
+	let touched = $state({
+		title: false,
+		description: false,
+		dueDate: false
+	});
+
+	function validateField(field) {
+		touched[field] = true;
+		
+		if (field === 'title') {
+			if (!title.trim()) {
+				errors.title = 'Please enter a title for the issue';
+			} else if (title.trim().length < 3) {
+				errors.title = 'Title must be at least 3 characters';
+			} else {
+				errors.title = '';
+			}
+		}
+		
+		if (field === 'description') {
+			if (!description.trim()) {
+				errors.description = 'Please provide a description';
+			} else if (description.trim().length < 10) {
+				errors.description = 'Description must be at least 10 characters';
+			} else {
+				errors.description = '';
+			}
+		}
+		
+		if (field === 'dueDate') {
+			if (!dueDate) {
+				errors.dueDate = 'Please select a due date';
+			} else {
+				errors.dueDate = '';
+			}
+		}
+	}
+
+	function validateAll() {
+		validateField('title');
+		validateField('description');
+		validateField('dueDate');
+		
+		return !errors.title && !errors.description && !errors.dueDate;
+	}
+
 	function handleCreate() {
-		if (!title) return;
+		if (!validateAll()) return;
+		
 		onCreate({
 			id: crypto.randomUUID(), // Unique ID
 			title,
@@ -42,6 +96,18 @@
 		storyPoints = 1;
 		priority = 'Medium';
 		cardColor = 'bg-yellow-200';
+		
+		// Reset validation state
+		errors = {
+			title: '',
+			description: '',
+			dueDate: ''
+		};
+		touched = {
+			title: false,
+			description: false,
+			dueDate: false
+		};
 	}
 </script>
 
@@ -92,14 +158,22 @@
 					Title
 				</span>
 				<input
-					class="rounded border border-amber-200 bg-white/80 px-3 py-2 shadow-sm 
-					focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200
-					transition-all"
+					class={`rounded border ${touched.title && errors.title ? 'border-red-400 bg-red-50' : 'border-amber-200 bg-white/80'} px-3 py-2 shadow-sm 
+					focus:border-amber-400 focus:outline-none focus:ring-2 ${touched.title && errors.title ? 'focus:ring-red-200' : 'focus:ring-amber-200'}
+					transition-all`}
 					type="text"
 					bind:value={title}
+					onblur={() => validateField('title')}
+					oninput={() => { if (touched.title) validateField('title'); }}
 					placeholder="Enter issue title..."
 					required
 				/>
+				{#if touched.title && errors.title}
+					<span class="text-red-600 text-xs flex items-center gap-1 mt-0.5">
+						<AlertCircle size={12} />
+						{errors.title}
+					</span>
+				{/if}
 			</label>
 
 			<label class="flex flex-col gap-1">
@@ -108,13 +182,21 @@
 					Description
 				</span>
 				<textarea
-					class="rounded border border-amber-200 bg-white/80 px-3 py-2 shadow-sm 
-					focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200
-					transition-all resize-none"
+					class={`rounded border ${touched.description && errors.description ? 'border-red-400 bg-red-50' : 'border-amber-200 bg-white/80'} px-3 py-2 shadow-sm 
+					focus:border-amber-400 focus:outline-none focus:ring-2 ${touched.description && errors.description ? 'focus:ring-red-200' : 'focus:ring-amber-200'}
+					transition-all resize-none`}
 					bind:value={description}
+					onblur={() => validateField('description')}
+					oninput={() => { if (touched.description) validateField('description'); }}
 					placeholder="Describe the issue..."
 					rows="3"
 				></textarea>
+				{#if touched.description && errors.description}
+					<span class="text-red-600 text-xs flex items-center gap-1 mt-0.5">
+						<AlertCircle size={12} />
+						{errors.description}
+					</span>
+				{/if}
 			</label>
 
 			<div class="grid grid-cols-2 gap-3">
@@ -124,12 +206,20 @@
 						Due Date
 					</span>
 					<input
-						class="rounded border border-amber-200 bg-white/80 px-3 py-2 shadow-sm 
-						focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200
-						transition-all"
+						class={`rounded border ${touched.dueDate && errors.dueDate ? 'border-red-400 bg-red-50' : 'border-amber-200 bg-white/80'} px-3 py-2 shadow-sm 
+						focus:border-amber-400 focus:outline-none focus:ring-2 ${touched.dueDate && errors.dueDate ? 'focus:ring-red-200' : 'focus:ring-amber-200'}
+						transition-all`}
 						type="date"
 						bind:value={dueDate}
+						onblur={() => validateField('dueDate')}
+						onchange={() => validateField('dueDate')}
 					/>
+					{#if touched.dueDate && errors.dueDate}
+						<span class="text-red-600 text-xs flex items-center gap-1 mt-0.5">
+							<AlertCircle size={12} />
+							{errors.dueDate}
+						</span>
+					{/if}
 				</label>
 
 				<label class="flex flex-col gap-1">
