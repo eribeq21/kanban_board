@@ -1,17 +1,17 @@
 <script>
-	import { Edit, Calendar, Zap, AlertCircle, CheckCircle, X, StickyNote } from 'lucide-svelte';
+	import { Edit, Calendar, Zap, AlertCircle, X, StickyNote } from 'lucide-svelte';
+	import TextInput from '$lib/components/ui/TextInput.svelte';
+	import TextArea from '$lib/components/ui/TextArea.svelte';
+	import Select from '$lib/components/ui/Select.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
+	import ColorPicker from '$lib/components/ui/ColorPicker.svelte';
+	import FormField from '$lib/components/ui/FormField.svelte';
+	import PaperTexture from '$lib/components/ui/PaperTexture.svelte';
+	import FoldedCorner from '$lib/components/ui/FoldedCorner.svelte';
+	import { validateTitle, validateDescription, validateDueDate } from '$lib/utils/validation';
+	import { CARD_COLORS, PRIORITY_LEVELS } from '$lib/utils/issueConstants';
 	
 	let { issue, onUpdate, onClose } = $props();
-
-	// Available colors
-	const colors = [
-		{ name: 'Yellow', class: 'bg-yellow-200', value: 'bg-yellow-200' },
-		{ name: 'Pink', class: 'bg-pink-200', value: 'bg-pink-200' },
-		{ name: 'Green', class: 'bg-green-200', value: 'bg-green-200' },
-		{ name: 'Blue', class: 'bg-blue-200', value: 'bg-blue-200' },
-		{ name: 'Orange', class: 'bg-orange-200', value: 'bg-orange-200' },
-		{ name: 'Purple', class: 'bg-purple-200', value: 'bg-purple-200' }
-	];
 
 	let title = $state(issue.title);
 	let description = $state(issue.description);
@@ -23,9 +23,15 @@
 	let storyPoints = $state(issue.storyPoints);
 	let priority = $state(issue.priority);
 	let cardColor = $state(issue.cardColor || 'bg-yellow-200');
+	let errors = $state({ title: '', description: '', dueDate: '' });
 
 	function handleUpdate() {
-		if (!title) return;
+		errors.title = validateTitle(title);
+		errors.description = validateDescription(description);
+		errors.dueDate = validateDueDate(dueDate);
+		
+		if (errors.title || errors.description || errors.dueDate) return;
+		
 		onUpdate({
 			...issue,
 			title,
@@ -35,10 +41,8 @@
 			priority,
 			cardColor
 		});
+		onClose();
 	}
-
-	// Get dialog background based on card color (reactive)
-	let dialogBg = $derived(cardColor || 'bg-yellow-200');
 </script>
 
 <dialog open class="issue-dialog">
@@ -46,15 +50,13 @@
 		class={`relative w-80 rounded-sm p-6 text-gray-800
 		transition-all duration-300 
 		shadow-[4px_6px_12px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.5)]
-		border-t border-l ${dialogBg}`}
+		border-t border-l ${cardColor}`}
 		style="
 			transform: rotate(1.2deg);
 		"
 	>
 		<!-- Paper texture overlay -->
-		<div class="absolute inset-0 pointer-events-none opacity-10 rounded-sm"
-			style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');">
-		</div>
+		<PaperTexture />
 
 		<!-- Close button -->
 		<button
@@ -66,14 +68,7 @@
 		</button>
 
 		<!-- Top folded corner -->
-		<div
-			class={`pointer-events-none absolute top-0 right-0 h-10 w-10 ${dialogBg}`}
-			style="
-				clip-path: polygon(100% 0, 0 0, 100% 100%);
-				box-shadow: -2px 2px 4px rgba(0,0,0,0.15);
-				filter: brightness(0.9);
-			"
-		></div>
+		<FoldedCorner {cardColor} />
 
 		<!-- Header with icon -->
 		<div class="mb-5 flex items-center gap-2 relative z-10">
@@ -82,119 +77,44 @@
 		</div>
 
 		<div class="flex flex-col gap-4 text-sm relative z-10">
-			<label class="flex flex-col gap-1">
-				<span class="font-medium text-gray-700 flex items-center gap-1.5">
-					<Edit size={16} class="text-blue-600" />
-					Title
-				</span>
-				<input
-					class="rounded border border-blue-200 bg-white/80 px-3 py-2 shadow-sm 
-					focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200
-					transition-all"
-					type="text"
-					bind:value={title}
-					placeholder="Enter issue title..."
-					required
-				/>
-			</label>
+			<FormField label="Title" icon={StickyNote} iconColor="text-amber-600">
+				<TextInput bind:value={title} placeholder="Enter issue title..." />
+				{#if errors.title}
+					<p class="text-red-600 text-xs mt-1">{errors.title}</p>
+				{/if}
+			</FormField>
 
-			<label class="flex flex-col gap-1">
-				<span class="font-medium text-gray-700 flex items-center gap-1.5">
-					<AlertCircle size={16} class="text-indigo-600" />
-					Description
-				</span>
-				<textarea
-					class="rounded border border-blue-200 bg-white/80 px-3 py-2 shadow-sm 
-					focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200
-					transition-all resize-none"
-					bind:value={description}
-					placeholder="Describe the issue..."
-					rows="3"
-				></textarea>
-			</label>
+			<FormField label="Description" icon={AlertCircle} iconColor="text-blue-600">
+				<TextArea bind:value={description} placeholder="Describe the issue..." />
+				{#if errors.description}
+					<p class="text-red-600 text-xs mt-1">{errors.description}</p>
+				{/if}
+			</FormField>
 
 			<div class="grid grid-cols-2 gap-3">
-				<label class="flex flex-col gap-1">
-					<span class="font-medium text-gray-700 flex items-center gap-1.5">
-						<Calendar size={16} class="text-green-600" />
-						Due Date
-					</span>
-					<input
-						class="rounded border border-blue-200 bg-white/80 px-3 py-2 shadow-sm 
-						focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200
-						transition-all"
-						type="date"
-						bind:value={dueDate}
-					/>
-				</label>
+				<FormField label="Due Date" icon={Calendar} iconColor="text-green-600">
+					<TextInput bind:value={dueDate} type="date" />
+					{#if errors.dueDate}
+						<p class="text-red-600 text-xs mt-1">{errors.dueDate}</p>
+					{/if}
+				</FormField>
 
-				<label class="flex flex-col gap-1">
-					<span class="font-medium text-gray-700 flex items-center gap-1.5">
-						<Zap size={16} class="text-purple-600" />
-						Story Points
-					</span>
-					<input
-						class="rounded border border-blue-200 bg-white/80 px-3 py-2 shadow-sm 
-						focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200
-						transition-all"
-						type="number"
-						bind:value={storyPoints}
-						min="1"
-					/>
-				</label>
+				<FormField label="Story Points" icon={Zap} iconColor="text-purple-600">
+					<TextInput bind:value={storyPoints} type="number" />
+				</FormField>
 			</div>
 
-			<label class="flex flex-col gap-1">
-				<span class="font-medium text-gray-700 flex items-center gap-1.5">
-					<AlertCircle size={16} class="text-red-600" />
-					Priority
-				</span>
-				<select
-					class="rounded border border-blue-200 bg-white/80 px-3 py-2 shadow-sm 
-					focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200
-					transition-all"
-					bind:value={priority}
-				>
-					<option>Low</option>
-					<option>Medium</option>
-					<option>High</option>
-				</select>
-			</label>
+			<FormField label="Priority" icon={AlertCircle} iconColor="text-red-600">
+				<Select bind:value={priority} options={PRIORITY_LEVELS} />
+			</FormField>
 
-			<label class="flex flex-col gap-1">
-				<span class="font-medium text-gray-700 flex items-center gap-1.5">
-					<StickyNote size={16} class="text-blue-600" />
-					Card Color
-				</span>
-				<div class="flex gap-2">
-					{#each colors as color}
-						<button
-							type="button"
-							onclick={() => cardColor = color.value}
-							class={`w-10 h-10 rounded-md border-2 transition-all hover:scale-110 ${color.class} ${cardColor === color.value ? 'border-gray-800 ring-2 ring-gray-400' : 'border-gray-300'}`}
-							title={color.name}
-						></button>
-					{/each}
-				</div>
-			</label>
+			<FormField label="Card Color" icon={StickyNote} iconColor="text-amber-600">
+				<ColorPicker bind:selectedColor={cardColor} colors={CARD_COLORS} />
+			</FormField>
 
 			<div class="mt-4 flex justify-end gap-2">
-				<button
-					class="rounded-md bg-blue-500 px-4 py-2 text-white shadow-md hover:bg-blue-600 
-					transition-all hover:shadow-lg flex items-center gap-1.5 font-medium"
-					onclick={handleUpdate}
-				>
-					<CheckCircle size={18} />
-					Update
-				</button>
-				<button
-					class="rounded-md bg-gray-200 px-4 py-2 text-gray-700 shadow hover:bg-gray-300
-					transition-all flex items-center gap-1.5 font-medium"
-					onclick={onClose}
-				>
-					<X size={18} />
-					Cancel
-				</button>
+				<Button text="Update" variant="primary" onclick={handleUpdate} />
+				<Button text="Cancel" variant="secondary" onclick={onClose} />
 			</div>
 		</div>
 	</div>
