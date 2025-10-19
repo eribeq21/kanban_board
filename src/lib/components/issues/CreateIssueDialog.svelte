@@ -1,5 +1,8 @@
 <script>
 	import { StickyNote, Calendar, Zap, AlertCircle, CheckCircle, X } from 'lucide-svelte';
+	import TextInput from '$lib/components/ui/TextInput.svelte';
+	import Select from '$lib/components/ui/Select.svelte';
+	import Button from '$lib/components/ui/Button.svelte';
 	
 	let { onCreate, onClose } = $props();
 
@@ -157,17 +160,7 @@
 					<StickyNote size={16} class="text-amber-600" />
 					Title
 				</span>
-				<input
-					class={`rounded border ${touched.title && errors.title ? 'border-red-400 bg-red-50' : 'border-amber-200 bg-white/80'} px-3 py-2 shadow-sm 
-					focus:border-amber-400 focus:outline-none focus:ring-2 ${touched.title && errors.title ? 'focus:ring-red-200' : 'focus:ring-amber-200'}
-					transition-all`}
-					type="text"
-					bind:value={title}
-					onblur={() => validateField('title')}
-					oninput={() => { if (touched.title) validateField('title'); }}
-					placeholder="Enter issue title..."
-					required
-				/>
+				<TextInput bind:value={title} placeholder="Enter issue title..." />
 				{#if touched.title && errors.title}
 					<span class="text-red-600 text-xs flex items-center gap-1 mt-0.5">
 						<AlertCircle size={12} />
@@ -205,15 +198,7 @@
 						<Calendar size={16} class="text-green-600" />
 						Due Date
 					</span>
-					<input
-						class={`rounded border ${touched.dueDate && errors.dueDate ? 'border-red-400 bg-red-50' : 'border-amber-200 bg-white/80'} px-3 py-2 shadow-sm 
-						focus:border-amber-400 focus:outline-none focus:ring-2 ${touched.dueDate && errors.dueDate ? 'focus:ring-red-200' : 'focus:ring-amber-200'}
-						transition-all`}
-						type="date"
-						bind:value={dueDate}
-						onblur={() => validateField('dueDate')}
-						onchange={() => validateField('dueDate')}
-					/>
+					<TextInput bind:value={dueDate} type="date" />
 					{#if touched.dueDate && errors.dueDate}
 						<span class="text-red-600 text-xs flex items-center gap-1 mt-0.5">
 							<AlertCircle size={12} />
@@ -227,14 +212,7 @@
 						<Zap size={16} class="text-purple-600" />
 						Story Points
 					</span>
-					<input
-						class="rounded border border-amber-200 bg-white/80 px-3 py-2 shadow-sm 
-						focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200
-						transition-all"
-						type="number"
-						bind:value={storyPoints}
-						min="1"
-					/>
+					<TextInput bind:value={storyPoints} type="number" />
 				</label>
 			</div>
 
@@ -243,16 +221,7 @@
 					<AlertCircle size={16} class="text-red-600" />
 					Priority
 				</span>
-				<select
-					class="rounded border border-amber-200 bg-white/80 px-3 py-2 shadow-sm 
-					focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200
-					transition-all"
-					bind:value={priority}
-				>
-					<option>Low</option>
-					<option>Medium</option>
-					<option>High</option>
-				</select>
+				<Select bind:value={priority} options={['Low', 'Medium', 'High']} />
 			</label>
 
 			<label class="flex flex-col gap-1">
@@ -273,22 +242,8 @@
 			</label>
 
 			<div class="mt-4 flex justify-end gap-2">
-				<button
-					class="rounded-md bg-green-500 px-4 py-2 text-white shadow-md hover:bg-green-600 
-					transition-all hover:shadow-lg flex items-center gap-1.5 font-medium"
-					onclick={handleCreate}
-				>
-					<CheckCircle size={18} />
-					Create
-				</button>
-				<button
-					class="rounded-md bg-gray-200 px-4 py-2 text-gray-700 shadow hover:bg-gray-300
-					transition-all flex items-center gap-1.5 font-medium"
-					onclick={onClose}
-				>
-					<X size={18} />
-					Cancel
-				</button>
+				<Button text="Create" variant="primary" onclick={handleCreate} />
+				<Button text="Cancel" variant="secondary" onclick={onClose} />
 			</div>
 		</div>
 	</div>
