@@ -1,9 +1,7 @@
 <script>
 	let { 
 		value = $bindable(''),
-		placeholder = '',
-		onblur,
-		oninput
+		placeholder = ''
 	} = $props();
 </script>
 
@@ -14,6 +12,4 @@
 	bind:value
 	{placeholder}
 	rows="3"
-	onblur={onblur}
-	oninput={oninput}
 ></textarea>

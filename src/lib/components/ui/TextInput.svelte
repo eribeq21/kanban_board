@@ -2,10 +2,7 @@
 	let { 
 		value = $bindable(''),
 		placeholder = '',
-		type = 'text',
-		onblur,
-		oninput,
-		onchange
+		type = 'text'
 	} = $props();
 </script>
 
@@ -16,7 +13,4 @@
 	{type}
 	bind:value
 	{placeholder}
-	onblur={onblur}
-	oninput={oninput}
-	onchange={onchange}
 />
