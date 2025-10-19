@@ -1,8 +1,11 @@
 <script>
 	import { StickyNote, Calendar, Zap, AlertCircle, CheckCircle, X } from 'lucide-svelte';
 	import TextInput from '$lib/components/ui/TextInput.svelte';
+	import TextArea from '$lib/components/ui/TextArea.svelte';
 	import Select from '$lib/components/ui/Select.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
+	import ColorPicker from '$lib/components/ui/ColorPicker.svelte';
+	import FormField from '$lib/components/ui/FormField.svelte';
 	
 	let { onCreate, onClose } = $props();
 
@@ -78,9 +81,17 @@
 	}
 
 	function handleCreate() {
-		if (!validateAll()) return;
+		// Mark all fields as touched
+		touched.title = true;
+		touched.description = true;
+		touched.dueDate = true;
 		
-		onCreate({
+		if (!validateAll()) {
+			console.log('Validation failed:', errors);
+			return;
+		}
+		
+		const newIssue = {
 			id: crypto.randomUUID(), // Unique ID
 			title,
 			description,
@@ -88,8 +99,12 @@
 			storyPoints: Number(storyPoints),
 			priority,
 			cardColor
-		});
+		};
+		
+		console.log('Creating issue:', newIssue);
+		onCreate(newIssue);
 		reset();
+		onClose();
 	}
 
 	function reset() {
@@ -155,91 +170,55 @@
 		</div>
 
 		<div class="flex flex-col gap-4 text-sm relative z-10">
-			<label class="flex flex-col gap-1">
-				<span class="font-medium text-gray-700 flex items-center gap-1.5">
-					<StickyNote size={16} class="text-amber-600" />
-					Title
-				</span>
-				<TextInput bind:value={title} placeholder="Enter issue title..." />
+			<FormField label="Title" icon={StickyNote} iconColor="text-amber-600">
+				<TextInput 
+					bind:value={title} 
+					placeholder="Enter issue title..." 
+					onblur={() => validateField('title')}
+					oninput={() => { if (touched.title) validateField('title'); }}
+				/>
 				{#if touched.title && errors.title}
-					<span class="text-red-600 text-xs flex items-center gap-1 mt-0.5">
-						<AlertCircle size={12} />
-						{errors.title}
-					</span>
+					<p class="text-red-600 text-xs mt-1">{errors.title}</p>
 				{/if}
-			</label>
+			</FormField>
 
-			<label class="flex flex-col gap-1">
-				<span class="font-medium text-gray-700 flex items-center gap-1.5">
-					<AlertCircle size={16} class="text-blue-600" />
-					Description
-				</span>
-				<textarea
-					class={`rounded border ${touched.description && errors.description ? 'border-red-400 bg-red-50' : 'border-amber-200 bg-white/80'} px-3 py-2 shadow-sm 
-					focus:border-amber-400 focus:outline-none focus:ring-2 ${touched.description && errors.description ? 'focus:ring-red-200' : 'focus:ring-amber-200'}
-					transition-all resize-none`}
-					bind:value={description}
+			<FormField label="Description" icon={AlertCircle} iconColor="text-blue-600">
+				<TextArea 
+					bind:value={description} 
+					placeholder="Describe the issue..." 
 					onblur={() => validateField('description')}
 					oninput={() => { if (touched.description) validateField('description'); }}
-					placeholder="Describe the issue..."
-					rows="3"
-				></textarea>
+				/>
 				{#if touched.description && errors.description}
-					<span class="text-red-600 text-xs flex items-center gap-1 mt-0.5">
-						<AlertCircle size={12} />
-						{errors.description}
-					</span>
+					<p class="text-red-600 text-xs mt-1">{errors.description}</p>
 				{/if}
-			</label>
+			</FormField>
 
 			<div class="grid grid-cols-2 gap-3">
-				<label class="flex flex-col gap-1">
-					<span class="font-medium text-gray-700 flex items-center gap-1.5">
-						<Calendar size={16} class="text-green-600" />
-						Due Date
-					</span>
-					<TextInput bind:value={dueDate} type="date" />
+				<FormField label="Due Date" icon={Calendar} iconColor="text-green-600">
+					<TextInput 
+						bind:value={dueDate} 
+						type="date" 
+						onblur={() => validateField('dueDate')}
+						onchange={() => validateField('dueDate')}
+					/>
 					{#if touched.dueDate && errors.dueDate}
-						<span class="text-red-600 text-xs flex items-center gap-1 mt-0.5">
-							<AlertCircle size={12} />
-							{errors.dueDate}
-						</span>
+						<p class="text-red-600 text-xs mt-1">{errors.dueDate}</p>
 					{/if}
-				</label>
+				</FormField>
 
-				<label class="flex flex-col gap-1">
-					<span class="font-medium text-gray-700 flex items-center gap-1.5">
-						<Zap size={16} class="text-purple-600" />
-						Story Points
-					</span>
+				<FormField label="Story Points" icon={Zap} iconColor="text-purple-600">
 					<TextInput bind:value={storyPoints} type="number" />
-				</label>
+				</FormField>
 			</div>
 
-			<label class="flex flex-col gap-1">
-				<span class="font-medium text-gray-700 flex items-center gap-1.5">
-					<AlertCircle size={16} class="text-red-600" />
-					Priority
-				</span>
+			<FormField label="Priority" icon={AlertCircle} iconColor="text-red-600">
 				<Select bind:value={priority} options={['Low', 'Medium', 'High']} />
-			</label>
+			</FormField>
 
-			<label class="flex flex-col gap-1">
-				<span class="font-medium text-gray-700 flex items-center gap-1.5">
-					<StickyNote size={16} class="text-amber-600" />
-					Card Color
-				</span>
-				<div class="flex gap-2">
-					{#each colors as color}
-						<button
-							type="button"
-							onclick={() => cardColor = color.value}
-							class={`w-10 h-10 rounded-md border-2 transition-all hover:scale-110 ${color.class} ${cardColor === color.value ? 'border-gray-800 ring-2 ring-gray-400' : 'border-gray-300'}`}
-							title={color.name}
-						></button>
-					{/each}
-				</div>
-			</label>
+			<FormField label="Card Color" icon={StickyNote} iconColor="text-amber-600">
+				<ColorPicker bind:selectedColor={cardColor} {colors} />
+			</FormField>
 
 			<div class="mt-4 flex justify-end gap-2">
 				<Button text="Create" variant="primary" onclick={handleCreate} />
