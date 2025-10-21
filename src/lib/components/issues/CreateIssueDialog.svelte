@@ -56,13 +56,7 @@
 		"
 	>
 		<!-- Close button -->
-		<button
-			onclick={onClose}
-			class="absolute -top-2 -right-2 p-1.5 bg-gray-700 hover:bg-gray-800 text-white rounded-full shadow-lg transition-all hover:scale-110 z-10"
-			aria-label="Close dialog"
-		>
-			<X size={16} />
-		</button>
+		<Button variant="close" onclick={onClose} icon={X} iconSize={16} ariaLabel="Close dialog" />
 
 		<!-- Top folded corner -->
 		<FoldedCorner {cardColor} />
