@@ -1,6 +1,6 @@
 export async function getCountry() {
 	const API_KEY = '1625a5fc9c4240fdbe1726a04343e712';
-	
+
 	return new Promise((resolve, reject) => {
 		if (!navigator.geolocation) {
 			reject(new Error('Geolocation not supported'));
@@ -26,7 +26,7 @@ export async function getCountry() {
 					}
 
 					const result = { country, city, flag };
-					
+
 					resolve(result);
 				} catch (error) {
 					reject(error);

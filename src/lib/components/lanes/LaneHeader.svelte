@@ -1,6 +1,6 @@
 <script>
 	import { Pin } from 'lucide-svelte';
-	
+
 	let { name } = $props();
 </script>
 
@@ -8,16 +8,16 @@
 <div class="mb-4 flex justify-center">
 	<div class="relative inline-block">
 		<!-- Pin holding the label -->
-		<div 
-			class="absolute -top-2 left-1/2 -translate-x-1/2 text-gray-600 z-10"
+		<div
+			class="absolute -top-2 left-1/2 z-10 -translate-x-1/2 text-gray-600"
 			style="filter: drop-shadow(1px 2px 2px rgba(0,0,0,0.3));"
 		>
 			<Pin size={16} fill="currentColor" />
 		</div>
-		
+
 		<!-- Label tag -->
-		<h2 
-			class="px-4 py-1.5 text-sm font-medium text-gray-800 relative"
+		<h2
+			class="relative px-4 py-1.5 text-sm font-medium text-gray-800"
 			style="
 				background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc0 100%);
 				border: 1px solid rgba(139, 92, 46, 0.3);

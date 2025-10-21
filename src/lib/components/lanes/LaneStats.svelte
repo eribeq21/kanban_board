@@ -1,6 +1,6 @@
 <script>
 	import { ListTodo, Target, TrendingUp, AlertTriangle } from 'lucide-svelte';
-	
+
 	let { count, totalPoints, avgPoints, overdueCount } = $props();
 </script>
 
@@ -16,7 +16,7 @@
 	>
 		<div class="relative flex items-center gap-1">
 			<ListTodo size={12} class="text-gray-600" />
-			<span class="text-xs font-mono font-semibold text-gray-700">{count}</span>
+			<span class="font-mono text-xs font-semibold text-gray-700">{count}</span>
 		</div>
 	</div>
 
@@ -28,12 +28,13 @@
 			background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 50%, #ffeaa7 100%);
 		"
 	>
-		<div class="absolute inset-0 opacity-20 rounded"
-			style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence baseFrequency=%221.5%22/%3E%3C/filter%3E%3Crect width=%22100%22 height=%22100%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');">
-		</div>
+		<div
+			class="absolute inset-0 rounded opacity-20"
+			style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence baseFrequency=%221.5%22/%3E%3C/filter%3E%3Crect width=%22100%22 height=%22100%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');"
+		></div>
 		<div class="relative flex items-center gap-1">
 			<Target size={12} class="text-orange-700" />
-			<span class="text-xs font-mono font-semibold text-gray-700">{totalPoints}</span>
+			<span class="font-mono text-xs font-semibold text-gray-700">{totalPoints}</span>
 		</div>
 	</div>
 
@@ -45,12 +46,13 @@
 			background: linear-gradient(135deg, #dfe6e9 0%, #b2bec3 50%, #dfe6e9 100%);
 		"
 	>
-		<div class="absolute inset-0 opacity-20 rounded"
-			style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence baseFrequency=%221.5%22/%3E%3C/filter%3E%3Crect width=%22100%22 height=%22100%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');">
-		</div>
+		<div
+			class="absolute inset-0 rounded opacity-20"
+			style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence baseFrequency=%221.5%22/%3E%3C/filter%3E%3Crect width=%22100%22 height=%22100%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');"
+		></div>
 		<div class="relative flex items-center gap-1">
 			<TrendingUp size={12} class="text-gray-600" />
-			<span class="text-xs font-mono font-semibold text-gray-700">~{avgPoints}</span>
+			<span class="font-mono text-xs font-semibold text-gray-700">~{avgPoints}</span>
 		</div>
 	</div>
 
@@ -63,12 +65,13 @@
 				background: linear-gradient(135deg, #fab1a0 0%, #ff7675 50%, #fab1a0 100%);
 			"
 		>
-			<div class="absolute inset-0 opacity-20 rounded"
-				style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence baseFrequency=%221.5%22/%3E%3C/filter%3E%3Crect width=%22100%22 height=%22100%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');">
-			</div>
+			<div
+				class="absolute inset-0 rounded opacity-20"
+				style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence baseFrequency=%221.5%22/%3E%3C/filter%3E%3Crect width=%22100%22 height=%22100%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');"
+			></div>
 			<div class="relative flex items-center gap-1">
 				<AlertTriangle size={12} class="text-red-900" />
-				<span class="text-xs font-mono font-bold text-red-900">{overdueCount}</span>
+				<span class="font-mono text-xs font-bold text-red-900">{overdueCount}</span>
 			</div>
 		</div>
 	{/if}

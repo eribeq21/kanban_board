@@ -23,6 +23,4 @@ The app detects the user's location and fetches a background image from Unsplash
 
 ## Setup
 
-
 That's it. The app uses localStorage for data persistence, so no backend setup needed.
-

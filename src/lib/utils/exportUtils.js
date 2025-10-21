@@ -50,29 +50,33 @@ export async function shareIssue(issue) {
 	}
 }
 
-
-
-
-
-
 export function exportCSV(issues) {
-  // Headers
-  const headers = ['id', 'title', 'description', 'creationDate', 'dueDate', 'storyPoints', 'priority', 'status'];
+	// Headers
+	const headers = [
+		'id',
+		'title',
+		'description',
+		'creationDate',
+		'dueDate',
+		'storyPoints',
+		'priority',
+		'status'
+	];
 
-  // CSV rows
-  const csvRows = issues.map(issue => 
-    headers.map(field => JSON.stringify(issue[field] || '')).join(',')
-  );
+	// CSV rows
+	const csvRows = issues.map((issue) =>
+		headers.map((field) => JSON.stringify(issue[field] || '')).join(',')
+	);
 
-  // Full CSV content
-  const csvContent = [headers.join(','), ...csvRows].join('\n');
+	// Full CSV content
+	const csvContent = [headers.join(','), ...csvRows].join('\n');
 
-  // Create Blob and download
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'kanban_issues.csv';
-  a.click();
-  URL.revokeObjectURL(url);
+	// Create Blob and download
+	const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement('a');
+	a.href = url;
+	a.download = 'kanban_issues.csv';
+	a.click();
+	URL.revokeObjectURL(url);
 }

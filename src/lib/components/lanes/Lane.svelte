@@ -1,7 +1,9 @@
 <script>
+	// components
 	import IssueCard from '$lib/components/issues/IssueCard.svelte';
 	import LaneHeader from './LaneHeader.svelte';
 	import LaneStats from './LaneStats.svelte';
+	// utils
 	import { isOverdue } from '$lib/utils/dateUtils.js';
 
 	let { name, color, issues, updateStatus, deleteIssue, editIssue } = $props();
@@ -33,22 +35,23 @@
 		updateStatus(id, name);
 	}
 </script>
+
 <div
 	role="region"
-	class={`lane-container flex-1 relative border-r border-gray-400/50 p-4 min-h-full
-		bg-[radial-gradient(circle_at_1px_1px,_#d1d5db_1px,_transparent_0)] 
+	class={`lane-container relative min-h-full flex-1 border-r border-gray-400/50 bg-[radial-gradient(circle_at_1px_1px,_#d1d5db_1px,_transparent_0)]
 		[background-size:20px_20px] 
+		p-4 
 		${color} ${isOver ? 'border-2 border-dashed border-blue-500' : ''}`}
 	ondragover={handleDragOver}
 	ondragleave={handleDragLeave}
 	ondrop={handleDrop}
 >
 	<LaneHeader {name} />
-	
+
 	<LaneStats {count} {totalPoints} {avgPoints} {overdueCount} />
 
 	<!-- Cards container with flex wrap for multiple columns -->
-	<div class="flex flex-wrap gap-3 justify-start items-start">
+	<div class="flex flex-wrap items-start justify-start gap-3">
 		{#each issues as issue (issue.id)}
 			<IssueCard {issue} {deleteIssue} {editIssue} />
 		{/each}
