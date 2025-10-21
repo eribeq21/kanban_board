@@ -1,4 +1,6 @@
 <script>
+	import { flip } from 'svelte/animate';
+	import { fade, scale } from 'svelte/transition';
 	// components
 	import IssueCard from '$lib/components/issues/IssueCard.svelte';
 	import LaneHeader from './LaneHeader.svelte';
@@ -53,7 +55,13 @@
 	<!-- Cards container with flex wrap for multiple columns -->
 	<div class="flex flex-wrap items-start justify-start gap-3">
 		{#each issues as issue (issue.id)}
-			<IssueCard {issue} {deleteIssue} {editIssue} />
+			<div
+				animate:flip={{ duration: 400 }}
+				in:scale={{ duration: 300, start: 0.8 }}
+				out:scale={{ duration: 200, start: 1 }}
+			>
+				<IssueCard {issue} {deleteIssue} {editIssue} />
+			</div>
 		{/each}
 	</div>
 </div>

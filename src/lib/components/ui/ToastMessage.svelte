@@ -12,10 +12,30 @@
     };
     
     const colors = {
-        success: { bg: '#d4edda', border: '#8b5c2e', text: 'text-green-800', icon: 'text-green-600' },
-        error: { bg: '#f8d7da', border: '#8b5c2e', text: 'text-red-800', icon: 'text-red-600' },
-        warning: { bg: '#fff3cd', border: '#8b5c2e', text: 'text-yellow-800', icon: 'text-yellow-600' },
-        info: { bg: '#d1ecf1', border: '#8b5c2e', text: 'text-blue-800', icon: 'text-blue-600' }
+        success: { 
+            bg: 'bg-green-100', 
+            text: 'text-green-800', 
+            icon: 'text-green-600',
+            fold: 'bg-green-200'
+        },
+        error: { 
+            bg: 'bg-red-100', 
+            text: 'text-red-800', 
+            icon: 'text-red-600',
+            fold: 'bg-red-200'
+        },
+        warning: { 
+            bg: 'bg-yellow-100', 
+            text: 'text-yellow-800', 
+            icon: 'text-yellow-600',
+            fold: 'bg-yellow-200'
+        },
+        info: { 
+            bg: 'bg-blue-100', 
+            text: 'text-blue-800', 
+            icon: 'text-blue-600',
+            fold: 'bg-blue-200'
+        }
     };
     
     const Icon = icons[type];
@@ -25,48 +45,45 @@
 <div
     transition:fly={{ x: 300, duration: 300 }}
     class={`
-        relative min-w-[300px] max-w-[400px] p-4
-        ${color.text}
-        border-2 rounded-sm
-        shadow-[3px_4px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.6)]
+        relative min-w-[300px] max-w-[400px] p-4 pr-12
+        ${color.bg} ${color.text}
         font-sans text-sm
     `}
     style="
         transform: rotate(-0.5deg);
-        background: 
-            repeating-linear-gradient(
-                0deg,
-                ${color.bg},
-                ${color.bg} 24px,
-                rgba(139, 92, 46, 0.05) 24px,
-                rgba(139, 92, 46, 0.05) 25px
-            );
-        border-color: ${color.border};
+        border-radius: 2px 8px 2px 8px;
         box-shadow: 
-            3px 4px 8px rgba(0, 0, 0, 0.2),
-            inset 0 1px 0 rgba(255, 255, 255, 0.6),
+            4px 6px 12px rgba(0, 0, 0, 0.25),
             inset 0 0 40px rgba(139, 92, 46, 0.03);
+        background-image: 
+            radial-gradient(circle at 20% 50%, rgba(139, 92, 46, 0.02) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(139, 92, 46, 0.02) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(139, 92, 46, 0.02) 0%, transparent 50%);
+        filter: contrast(0.98) brightness(0.99);
     "
 >
-    <!-- Small folded corner -->
-    <div 
-        class="absolute top-0 right-0 w-6 h-6 z-20"
+    <!-- Bigger folded corner with X button -->
+    <button
+        onclick={onClose}
+        class={`
+            absolute top-0 right-0 w-12 h-12 z-20
+            ${color.fold}
+            flex items-start justify-end
+            hover:opacity-80 transition-opacity
+            cursor-pointer
+        `}
         style="
-            background: linear-gradient(135deg, transparent 50%, rgba(139, 92, 46, 0.2) 50%);
             clip-path: polygon(100% 0, 0 0, 100% 100%);
+            border-radius: 0 8px 0 0;
         "
-    ></div>
+        aria-label="Close"
+    >
+        <X size={14} class="mt-1 mr-1 text-gray-700" />
+    </button>
 
     <!-- Content -->
     <div class="relative z-10 flex items-start gap-3">
         <Icon class={color.icon} size={20} />
         <p class="flex-1 leading-relaxed">{message}</p>
-        <button
-            onclick={onClose}
-            class="text-gray-500 hover:text-gray-700 transition-colors -mt-1"
-            aria-label="Close"
-        >
-            <X size={16} />
-        </button>
     </div>
 </div>

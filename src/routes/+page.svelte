@@ -52,7 +52,6 @@
 			const data = await getCountry();
 			countryData = data;
 			console.log('Location detected:', data.country);
-			showToastMessage(`Location detected: ${data.country}`, 'info');
 		} catch (error) {
 			console.error('Geolocation error:', error.message);
 			countryData = { country: 'Unknown', city: 'Unknown', flag: null };
