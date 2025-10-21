@@ -14,6 +14,8 @@
 	import { showDoneNotification } from '$lib/utils/notifications.js';
 	import { exportCSV } from '$lib/utils/exportUtils.js';
 	import { LANES } from '$lib/utils/laneConstants.js';
+	import { checkScrollPosition, createScrollHandler, smoothScrollDown } from '$lib/utils/scrollUtils.js';
+
 
 	// State
 	let issues = $state([]);
@@ -83,40 +85,23 @@
 		editingIssue = null;
 	}
 
-	// Handle scroll to check if we should show the indicator
-	function handleScroll(e) {
-		const element = e.target;
-		const scrollTop = element.scrollTop;
-		const scrollHeight = element.scrollHeight;
-		const clientHeight = element.clientHeight;
-		
-		// Hide indicator only when at the bottom (within 20px of the bottom)
-		if (scrollTop + clientHeight >= scrollHeight - 20) {
-			showScrollIndicator = false;
-		} else {
-			showScrollIndicator = true;
-		}
-	}
+ 	// Scroll handling 
+    const handleScroll = createScrollHandler(({ showIndicator }) => {
+        showScrollIndicator = showIndicator;
+    });
 
-	// Check if there's content to scroll - show button immediately when content is scrollable
-	$effect(() => {
-		if (boardContainer) {
-			const hasScroll = boardContainer.scrollHeight > boardContainer.clientHeight;
-			const isAtBottom = boardContainer.scrollTop + boardContainer.clientHeight >= boardContainer.scrollHeight - 20;
-			// Show button if there's scrollable content AND we're not at the bottom
-			showScrollIndicator = hasScroll && !isAtBottom;
-		}
-	});
+	// Check if there's content to scroll
+    $effect(() => {
+        if (boardContainer) {
+            const { showIndicator } = checkScrollPosition(boardContainer);
+            showScrollIndicator = showIndicator;
+        }
+    });
 
 	// Smooth scroll down when indicator is clicked
-	function scrollDown() {
-		if (boardContainer) {
-			boardContainer.scrollBy({
-				top: boardContainer.clientHeight * 0.8,
-				behavior: 'smooth'
-			});
-		}
-	}
+    function scrollDown() {
+        smoothScrollDown(boardContainer);
+    }
 
 	// Lifecycle
 	onMount(init);
