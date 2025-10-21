@@ -7,6 +7,8 @@
 	import EditIssueDialog from '$lib/components/issues/EditIssueDialog.svelte';
 	import DeleteIssueDialog from '$lib/components/issues/DeleteIssueDialog.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
+	import ToastMessage from '$lib/components/ui/ToastMessage.svelte';
+
 	import { ChevronDown } from 'lucide-svelte';
 
 	// Utils
@@ -20,6 +22,11 @@
 		createScrollHandler,
 		smoothScrollDown
 	} from '$lib/utils/scrollUtils.js';
+
+
+	let toastMessage = $state('');
+    let toastType = $state('success');
+    let showToast = $state(false);
 
 	// State
 	let issues = $state([]);
@@ -45,9 +52,11 @@
 			const data = await getCountry();
 			countryData = data;
 			console.log('Location detected:', data.country);
+			showToastMessage(`Location detected: ${data.country}`, 'info');
 		} catch (error) {
 			console.error('Geolocation error:', error.message);
 			countryData = { country: 'Unknown', city: 'Unknown', flag: null };
+			showToastMessage('Could not detect location', 'warning');
 		}
 
 		// Register Service Worker for PWA
@@ -61,11 +70,23 @@
 		}
 	}
 
+	function showToastMessage(message, type = 'success') {
+        toastMessage = message;
+        toastType = type;
+        showToast = true;
+        
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            showToast = false;
+        }, 3000);
+    }
+
 	// Issue management
 	function addIssue(newIssue) {
-		issues.push({ ...newIssue, status: 'Do', creationDate: new Date() });
-		showDialog = false;
-	}
+        issues.push({ ...newIssue, status: 'Do', creationDate: new Date() });
+        showDialog = false;
+        showToastMessage('Issue created successfully!', 'success');
+    }
 
 	function updateStatus(id, newStatus) {
 		const issue = issues.find((i) => i.id === id);
@@ -89,6 +110,7 @@
         issues = issues.filter((i) => i.id !== id);
         showDeleteDialog = false;
         deletingIssue = null;
+        showToastMessage('Issue deleted successfully!', 'success');
     }
 
 	function editIssue(issue) {
@@ -100,6 +122,7 @@
 		issues = issues.map((i) => (i.id === updatedIssue.id ? updatedIssue : i));
 		showEditDialog = false;
 		editingIssue = null;
+		showToastMessage('Issue updated successfully!', 'success');
 	}
 
 	// Scroll handling
@@ -131,6 +154,7 @@
 	// Callback for CSV export
 	function handleExportCSV() {
 		exportCSV(issues);
+		showToastMessage('CSV exported successfully!', 'success');
 	}
 </script>
 
@@ -207,4 +231,15 @@
             }} 
         />
     {/if}
+
+	<!-- Toast Notification -->
+	{#if showToast}
+		<div class="fixed top-4 right-4 z-[9999]">
+			<ToastMessage 
+				message={toastMessage} 
+				type={toastType} 
+				onClose={() => showToast = false} 
+			/>
+		</div>
+	{/if}
 </main>
