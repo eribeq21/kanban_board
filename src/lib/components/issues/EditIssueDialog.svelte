@@ -9,6 +9,7 @@
 	import FoldedCorner from '$lib/components/ui/FoldedCorner.svelte';
 	import { validateTitle, validateDescription, validateDueDate } from '$lib/utils/validation';
 	import { CARD_COLORS, PRIORITY_LEVELS } from '$lib/utils/issueConstants';
+	import Dialog from '$lib/components/ui/Dialog.svelte';
 	
 	let { issue, onUpdate, onClose } = $props();
 
@@ -44,7 +45,7 @@
 	}
 </script>
 
-<dialog open class="issue-dialog">
+<Dialog>
 	<div
 		class={`relative w-80 rounded-sm p-6 text-gray-800
 		transition-all duration-300 
@@ -108,36 +109,4 @@
 			</div>
 		</div>
 	</div>
-</dialog>
-
-<style>
-	dialog {
-		position: fixed;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		padding: 0;
-		border: none;
-		background: transparent;
-	}
-
-	dialog::backdrop {
-		background: rgba(0, 0, 0, 0.3);
-		backdrop-filter: blur(2px);
-	}
-
-	.issue-dialog {
-		animation: popIn 0.2s ease-out;
-	}
-
-	@keyframes popIn {
-		from {
-			transform: scale(0.9) translate(-50%, -50%);
-			opacity: 0;
-		}
-		to {
-			transform: scale(1) translate(-50%, -50%);
-			opacity: 1;
-		}
-	}
-</style>
+</Dialog>
