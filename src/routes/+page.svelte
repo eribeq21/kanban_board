@@ -5,6 +5,7 @@
 	import Lane from '$lib/components/lanes/Lane.svelte';
 	import CreateIssueDialog from '$lib/components/issues/CreateIssueDialog.svelte';
 	import EditIssueDialog from '$lib/components/issues/EditIssueDialog.svelte';
+	import DeleteIssueDialog from '$lib/components/issues/DeleteIssueDialog.svelte';
 	import Header from '$lib/components/layout/Header.svelte';
 	import { ChevronDown } from 'lucide-svelte';
 
@@ -25,6 +26,8 @@
 	let showDialog = $state(false);
 	let showEditDialog = $state(false);
 	let editingIssue = $state(null);
+	let showDeleteDialog = $state(false);
+	let deletingIssue = $state(null);
 	let countryData = $state({ country: 'Loading...', flag: null });
 	let showScrollIndicator = $state(true);
 	let boardContainer = $state(null);
@@ -73,9 +76,20 @@
 			}
 		}
 	}
-	function deleteIssue(id) {
-		issues = issues.filter((i) => i.id !== id);
-	}
+
+	function confirmDeleteIssue(id) {
+        const issue = issues.find((i) => i.id === id);
+        if (issue) {
+            deletingIssue = issue;
+            showDeleteDialog = true;
+        }
+    }
+
+    function deleteIssue(id) {
+        issues = issues.filter((i) => i.id !== id);
+        showDeleteDialog = false;
+        deletingIssue = null;
+    }
 
 	function editIssue(issue) {
 		editingIssue = issue;
@@ -139,7 +153,7 @@
 					color={lane.color}
 					issues={getLaneIssues(lane.name)}
 					{updateStatus}
-					{deleteIssue}
+					deleteIssue={confirmDeleteIssue}
 					{editIssue}
 				/>
 			{/each}
@@ -182,4 +196,15 @@
 			}}
 		/>
 	{/if}
+
+	 {#if showDeleteDialog && deletingIssue}
+        <DeleteIssueDialog 
+            issue={deletingIssue} 
+            onDelete={deleteIssue} 
+            onClose={() => {
+                showDeleteDialog = false;
+                deletingIssue = null;
+            }} 
+        />
+    {/if}
 </main>
