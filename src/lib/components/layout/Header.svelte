@@ -18,7 +18,10 @@
 		<!-- Pin above flag -->
 		{#if countryData.flag}
 			<div class="relative">
-				<div class="absolute -top-2 left-1/2 -translate-x-1/2 z-20 text-green-400 opacity-70" style="transform: translate(-50%, -50%) rotate(-8deg);">
+				<div
+					class="absolute -top-2 left-1/2 z-20 -translate-x-1/2 text-green-400 opacity-70"
+					style="transform: translate(-50%, -50%) rotate(-8deg);"
+				>
 					<Pin size={14} fill="currentColor" />
 				</div>
 				<img
@@ -44,7 +47,10 @@
 		<!-- Export CSV button with pin -->
 		<div class="relative">
 			<!-- Pin above button -->
-			<div class="absolute -top-1 left-1/2 -translate-x-1/2 z-20 text-blue-400 opacity-70" style="transform: translate(-50%, -25%) rotate(12deg);">
+			<div
+				class="absolute -top-1 left-1/2 z-20 -translate-x-1/2 text-blue-400 opacity-70"
+				style="transform: translate(-50%, -25%) rotate(12deg);"
+			>
 				<Pin size={14} fill="currentColor" />
 			</div>
 			<Button
@@ -59,7 +65,10 @@
 		<!-- Add Card button with pin -->
 		<div class="relative">
 			<!-- Pin above button -->
-			<div class="absolute -top-1 left-1/2 -translate-x-1/2 z-20 text-red-400 opacity-70" style="transform: translate(-50%, -25%) rotate(-15deg);">
+			<div
+				class="absolute -top-1 left-1/2 z-20 -translate-x-1/2 text-red-400 opacity-70"
+				style="transform: translate(-50%, -25%) rotate(-15deg);"
+			>
 				<Pin size={14} fill="currentColor" />
 			</div>
 			<Button

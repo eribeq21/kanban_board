@@ -23,10 +23,9 @@
 		smoothScrollDown
 	} from '$lib/utils/scrollUtils.js';
 
-
 	let toastMessage = $state('');
-    let toastType = $state('success');
-    let showToast = $state(false);
+	let toastType = $state('success');
+	let showToast = $state(false);
 
 	// State
 	let issues = $state([]);
@@ -55,7 +54,7 @@
 		} catch (error) {
 			console.error('Geolocation error:', error.message);
 			countryData = { country: 'Unknown', city: 'Unknown', flag: null };
-			showToastMessage('Could not detect location', 'warning');
+			showToastMessage('Could not detect location, it seems you are offline!', 'warning');
 		}
 
 		// Register Service Worker for PWA
@@ -70,22 +69,22 @@
 	}
 
 	function showToastMessage(message, type = 'success') {
-        toastMessage = message;
-        toastType = type;
-        showToast = true;
-        
-        // Auto-hide after 3 seconds
-        setTimeout(() => {
-            showToast = false;
-        }, 3000);
-    }
+		toastMessage = message;
+		toastType = type;
+		showToast = true;
+
+		// Auto-hide after 3 seconds
+		setTimeout(() => {
+			showToast = false;
+		}, 3000);
+	}
 
 	// Issue management
 	function addIssue(newIssue) {
-        issues.push({ ...newIssue, status: 'Do', creationDate: new Date() });
-        showDialog = false;
-        showToastMessage('Issue created successfully!', 'success');
-    }
+		issues.push({ ...newIssue, status: 'Do', creationDate: new Date() });
+		showDialog = false;
+		showToastMessage('Issue created successfully!', 'success');
+	}
 
 	function updateStatus(id, newStatus) {
 		const issue = issues.find((i) => i.id === id);
@@ -98,19 +97,19 @@
 	}
 
 	function confirmDeleteIssue(id) {
-        const issue = issues.find((i) => i.id === id);
-        if (issue) {
-            deletingIssue = issue;
-            showDeleteDialog = true;
-        }
-    }
+		const issue = issues.find((i) => i.id === id);
+		if (issue) {
+			deletingIssue = issue;
+			showDeleteDialog = true;
+		}
+	}
 
-    function deleteIssue(id) {
-        issues = issues.filter((i) => i.id !== id);
-        showDeleteDialog = false;
-        deletingIssue = null;
-        showToastMessage('Issue deleted successfully!', 'success');
-    }
+	function deleteIssue(id) {
+		issues = issues.filter((i) => i.id !== id);
+		showDeleteDialog = false;
+		deletingIssue = null;
+		showToastMessage('Issue deleted successfully!', 'success');
+	}
 
 	function editIssue(issue) {
 		editingIssue = issue;
@@ -187,10 +186,10 @@
 	{#if showScrollIndicator}
 		<button
 			onclick={scrollDown}
-			class="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 cursor-pointer transition-transform hover:scale-110"
+			class="group fixed bottom-6 left-1/2 z-50 -translate-x-1/2 animate-pulse cursor-pointer transition-transform hover:scale-110 hover:animate-none"
 		>
 			<div
-				class="flex items-center gap-1 px-2 py-1 text-[10px] text-gray-700"
+				class="flex items-center gap-1 px-2 py-1 text-[10px] text-gray-700 opacity-70 transition-opacity group-hover:opacity-100"
 				style="
 					background: linear-gradient(135deg, #f5f5dc 0%, #e8dcc0 100%);
 					border: 1px solid rgba(139, 92, 46, 0.3);
@@ -220,25 +219,21 @@
 		/>
 	{/if}
 
-	 {#if showDeleteDialog && deletingIssue}
-        <DeleteIssueDialog 
-            issue={deletingIssue} 
-            onDelete={deleteIssue} 
-            onClose={() => {
-                showDeleteDialog = false;
-                deletingIssue = null;
-            }} 
-        />
-    {/if}
+	{#if showDeleteDialog && deletingIssue}
+		<DeleteIssueDialog
+			issue={deletingIssue}
+			onDelete={deleteIssue}
+			onClose={() => {
+				showDeleteDialog = false;
+				deletingIssue = null;
+			}}
+		/>
+	{/if}
 
 	<!-- Toast Notification -->
 	{#if showToast}
 		<div class="fixed top-4 right-4 z-[9999]">
-			<ToastMessage 
-				message={toastMessage} 
-				type={toastType} 
-				onClose={() => showToast = false} 
-			/>
+			<ToastMessage message={toastMessage} type={toastType} onClose={() => (showToast = false)} />
 		</div>
 	{/if}
 </main>
