@@ -14,9 +14,6 @@
 			background: linear-gradient(135deg, #f5f5dc 0%, #f0e68c 50%, #f5f5dc 100%);
 		"
 	>
-		<div class="absolute inset-0 opacity-20 rounded"
-			style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 100 100%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence baseFrequency=%221.5%22/%3E%3C/filter%3E%3Crect width=%22100%22 height=%22100%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');">
-		</div>
 		<div class="relative flex items-center gap-1">
 			<ListTodo size={12} class="text-gray-600" />
 			<span class="text-xs font-mono font-semibold text-gray-700">{count}</span>

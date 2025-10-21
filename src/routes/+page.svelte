@@ -24,11 +24,10 @@
 	let showScrollIndicator = $state(true);
 	let boardContainer = $state(null);
 
-	// Derived filtered issues for each lane
-	let doIssues = $derived(issues.filter((issue) => issue.status === 'Do'));
-	let doingIssues = $derived(issues.filter((issue) => issue.status === 'Doing'));
-	let doneIssues = $derived(issues.filter((issue) => issue.status === 'Done'));
-	let archiveIssues = $derived(issues.filter((issue) => issue.status === 'Archive'));
+	// Helper function to get issues for a specific lane
+	function getLaneIssues(status) {
+		return issues.filter((issue) => issue.status === status);
+	}
 
 	// API calls
 	async function init() {
@@ -148,38 +147,16 @@
 		class="flex-1 overflow-auto bg-white/80 backdrop-blur-sm border-t border-b border-gray-300 shadow-inner relative"
 	>
 		<div class="flex min-h-full">
-			<Lane
-				name="Do"
-				color="bg-blue-50"
-				issues={doIssues}
-				{updateStatus}
-				{deleteIssue}
-				{editIssue}
-			/>
-			<Lane
-				name="Doing"
-				color="bg-yellow-50"
-				issues={doingIssues}
-				{updateStatus}
-				{deleteIssue}
-				{editIssue}
-			/>
-			<Lane
-				name="Done"
-				color="bg-green-50"
-				issues={doneIssues}
-				{updateStatus}
-				{deleteIssue}
-				{editIssue}
-			/>
-			<Lane
-				name="Archive"
-				color="bg-gray-50"
-				issues={archiveIssues}
-				{updateStatus}
-				{deleteIssue}
-				{editIssue}
-			/>
+			{#each LANES as lane}
+				<Lane
+					name={lane.name}
+					color={lane.color}
+					issues={getLaneIssues(lane.name)}
+					{updateStatus}
+					{deleteIssue}
+					{editIssue}
+				/>
+			{/each}
 		</div>
 	</div>
 
