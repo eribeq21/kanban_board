@@ -6,7 +6,6 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import ColorPicker from '$lib/components/ui/ColorPicker.svelte';
 	import FormField from '$lib/components/ui/FormField.svelte';
-	import PaperTexture from '$lib/components/ui/PaperTexture.svelte';
 	import FoldedCorner from '$lib/components/ui/FoldedCorner.svelte';
 	import { validateTitle, validateDescription, validateDueDate } from '$lib/utils/validation';
 	import { CARD_COLORS, PRIORITY_LEVELS } from '$lib/utils/issueConstants';
@@ -55,9 +54,6 @@
 			transform: rotate(1.2deg);
 		"
 	>
-		<!-- Paper texture overlay -->
-		<PaperTexture />
-
 		<!-- Close button -->
 		<button
 			onclick={onClose}
